@@ -23,3 +23,8 @@ jobs:
     
     - name: compile & run tests
       run: make gh_test
+
+    - name: Download a single artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: my-artifact
