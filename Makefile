@@ -42,7 +42,7 @@ gh_bench:
 gh_test:
 	mkdir bin
 	make compile_test
-	make run_test
+	make run_test > test_log.txt
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
