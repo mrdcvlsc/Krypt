@@ -22,9 +22,9 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: compile & run tests
-      run: make gh_test
+      run: make gh_test > test_log.txt
 
     - name: Download a single artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-checkout@v2
       with:
         name: my-artifact
