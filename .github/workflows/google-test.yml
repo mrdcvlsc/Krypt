@@ -21,8 +21,11 @@ jobs:
       
     - uses: actions/checkout@v2
     
-    - name: compile & run tests
+    - name: compile
       run: make gh_test
+
+    - name: run and log
+      run make run_test > test_logs.txt
 
     - name: Download a single artifact
       uses: actions/download-checkout@v2
