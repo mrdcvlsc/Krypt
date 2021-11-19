@@ -28,6 +28,4 @@ jobs:
       run make run_test > test_logs.txt
 
     - name: Download a single artifact
-      uses: actions/download-checkout@v2
-      with:
-        name: my-artifact
+      uses: actions/download-artifacts@v2
