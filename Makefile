@@ -36,7 +36,7 @@ clean:
 
 gh_bench:
 	mkdir bin
-	g++ tests/benchmark.cpp -lbenchmark -lpthread -o benchmark
+	g++ tests/benchmark.cpp -lbenchmark -lpthread -o test/benchmark
 	bin/benchmark
 
 gh_test:
