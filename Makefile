@@ -34,12 +34,15 @@ clean:
 
 ########################## CLASSIC MAKEFILE ##########################
 
-gh_workflow:
+gh_bench:
+	mkdir bin
+	g++ tests/benchmark.cpp -lbenchmark -lpthread -o benchmark
+	bin/benchmark
+
+gh_test:
 	mkdir bin
 	make compile_test
 	make run_test
-	g++ benchmark.cpp -lbenchmark -lpthread -o benchmark
-	./benchmark
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
