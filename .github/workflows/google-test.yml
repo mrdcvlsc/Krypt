@@ -25,4 +25,9 @@ jobs:
       run: make gh_test
 
     - name: run and log
-      run make run_test > test_logs.txt
+      run: make run_test > test_logs.txt
+
+    - name: Download a single artifact
+      uses: actions/download-artifacts@v2
+      with:
+        name: my-artifact
