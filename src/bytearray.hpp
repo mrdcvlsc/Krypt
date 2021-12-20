@@ -18,6 +18,7 @@ namespace Krypt
         Bytes* detach();
 
         Bytes& operator[](size_t i);
+        const Bytes& operator[](size_t i) const;
         
         ByteArray();
 
