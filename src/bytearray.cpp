@@ -18,6 +18,25 @@ namespace  Krypt
         return ptr;
     }
 
+    const Bytes& ByteArray::operator[](size_t i) const
+    {
+        #ifndef INDEX_CHECK_DISABLE
+        if(second==0)
+            throw std::underflow_error(
+                "Krypt::ByteArray[] :"
+                "       accessing an empty byte array");
+        if(i<0)
+            throw std::underflow_error(
+                "Krypt::ByteArray[] :"
+                "       the index given for operator[] is less-than zero");
+        if(i>=second)
+            throw std::overflow_error(
+                "Krypt::ByteArray[] :"
+                "       index given for operator[] is greater-than ByteArray.length()-1");
+        #endif
+        return first[i];
+    }
+
     Bytes& ByteArray::operator[](size_t i)
     {
         #ifndef INDEX_CHECK_DISABLE
