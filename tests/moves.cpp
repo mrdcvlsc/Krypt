@@ -28,7 +28,7 @@ int main()
 
     {
         ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
-        cipher = krypt.decrypt(cipher.first,cipher.second);
+        cipher = krypt.decrypt(cipher.array(),cipher.length());
     }
     std::cout << "std::pair Assign to ByteArray 1 - Passed\n";
     
@@ -36,14 +36,14 @@ int main()
     {
         ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
         ByteArray recover;
-        recover = krypt.decrypt(cipher.first,cipher.second);
+        recover = krypt.decrypt(cipher.array(),cipher.length());
     }
     std::cout << "std::pair Assign to ByteArray 2 - Passed\n";
     
 
     {
         ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
-        ByteArray recover = krypt.decrypt(cipher.first,cipher.second);
+        ByteArray recover = krypt.decrypt(cipher.array(),cipher.length());
 
         cipher = recover;
     }
