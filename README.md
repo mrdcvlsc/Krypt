@@ -8,7 +8,7 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 **This is a portable software implementation, performance won't be as fast as optimized libraries like OpenSSL or Crypto++, it only relies on compiler optimizations for better performance.**
 
-![Tests](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
+![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
 
 -----------
 
