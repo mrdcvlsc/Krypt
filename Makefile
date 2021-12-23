@@ -46,8 +46,10 @@ gh_test:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	g++ -g ./tests/moves.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -o bin/moves
-	g++ -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test
+	g++ -g ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves
+	g++ -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -fsanitize=address -o bin/test
+	g++ -g ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni
+	g++ -g ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test_aesni
 
 compile_debug:
 	g++ -g ./dev/main.cpp -o bin/debug
@@ -61,6 +63,8 @@ compile_release:
 run_test:
 	bin/moves
 	bin/test
+	bin/moves_aesni
+	bin/test_aesni
 
 run_debug:
 	bin/debug
