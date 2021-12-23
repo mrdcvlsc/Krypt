@@ -2,7 +2,10 @@
 #define CIPHER_BLOCK_CPP
 
 #include "../../blockcipher.hpp"
+
+#ifdef USE_AESNI
 #include "simd_aes.hpp"
+#endif
 
 namespace Krypt::BlockCipher
 {
