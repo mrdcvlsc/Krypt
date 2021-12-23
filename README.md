@@ -16,7 +16,7 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 ***To get the peak performance of this portable library compile it with the flags ```-O3 -march=native```***
 
-***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.```
+***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.```***
 
 **sample program:**
 ```c++
