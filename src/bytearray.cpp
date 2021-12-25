@@ -5,23 +5,19 @@
 
 namespace  Krypt
 {
-
-    Bytes* ByteArray::array() { return first; }
-    size_t ByteArray::length() { return second; }
-
     // returns the pointer array, leaving the .array() equal to NULL, and .length() equal to zero
     Bytes* ByteArray::detach()
     {
-        Bytes* ptr = first;
-        first = NULL;
-        second = 0;
+        Bytes* ptr = array;
+        array = NULL;
+        length = 0;
         return ptr;
     }
 
     const Bytes& ByteArray::operator[](size_t i) const
     {
         #ifndef INDEX_CHECK_DISABLE
-        if(second==0)
+        if(length==0)
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       accessing an empty byte array");
@@ -29,18 +25,18 @@ namespace  Krypt
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       the index given for operator[] is less-than zero");
-        if(i>=second)
+        if(i>=length)
             throw std::overflow_error(
                 "Krypt::ByteArray[] :"
                 "       index given for operator[] is greater-than ByteArray.length()-1");
         #endif
-        return first[i];
+        return array[i];
     }
 
     Bytes& ByteArray::operator[](size_t i)
     {
         #ifndef INDEX_CHECK_DISABLE
-        if(second==0)
+        if(length==0)
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       accessing an empty byte array");
@@ -48,78 +44,85 @@ namespace  Krypt
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       the index given for operator[] is less-than zero");
-        if(i>=second)
+        if(i>=length)
             throw std::overflow_error(
                 "Krypt::ByteArray[] :"
                 "       index given for operator[] is greater-than ByteArray.length()-1");
         #endif
-        return first[i];
+        return array[i];
     }
     
     ByteArray::ByteArray()
     {
-        first = NULL;
-        second = 0;
+        array = NULL;
+        length = 0;
+    }
+
+    ByteArray::ByteArray(Bytes* heap_obj, size_t length)
+    {
+        array = heap_obj;
+        this->length = length;
     }
 
     // copy constructor
     ByteArray::ByteArray(const ByteArray& other)
     {
-        first = new Bytes[other.second];
-        second = other.second;
-        memcpy(first,other.first,other.second);
+        array = new Bytes[other.length];
+        length = other.length;
+        memcpy(array,other.array,other.length);
     }
 
     // move constructor
-    ByteArray::ByteArray(std::pair<Bytes*,size_t>&& other) noexcept
+    ByteArray::ByteArray(ByteArray&& other) noexcept
     {
-        first = other.first;
-        second = other.second;
+        array = other.array;
+        length = other.length;
 
-        other.first = NULL;
-        other.second = 0;
+        other.array = NULL;
+        other.length = 0;
     }
 
     // copy assignment
-    ByteArray& ByteArray::operator=(ByteArray& other)
+    ByteArray& ByteArray::operator=(const ByteArray& other)
     {
-        if(first!=NULL) delete [] first;
+        if(array!=NULL) delete [] array;
 
-        first = new Bytes[other.second];
-        second = other.second;
-        memcpy(first,other.first,other.second);
+        array = new Bytes[other.length];
+        length = other.length;
+        memcpy(array,other.array,other.length);
         return *this;
     }
 
     // move assingment
-    ByteArray& ByteArray::operator=(std::pair<Bytes*,size_t>&& other) noexcept
+    ByteArray& ByteArray::operator=(ByteArray&& other) noexcept
     {
-        if(first!=NULL) delete [] first;
+        if(array!=NULL) delete [] array;
 
-        first = other.first;
-        second = other.second;
+        array = other.array;
+        length = other.length;
 
-        other.first = NULL;
-        other.second = 0;
+        other.array = NULL;
+        other.length = 0;
         return *this;
     }
 
     ByteArray::~ByteArray()
     {
-        if(first!=NULL) delete [] first;
+        if(array!=NULL) delete [] array;
+        length = 0;
     }
 
     std::ostream& operator<<(std::ostream& outputStream, const ByteArray& instance)
     {
-        for(size_t i=0; i<instance.second; ++i)
-                outputStream << instance.first[i];
+        for(size_t i=0; i<instance.length; ++i)
+                outputStream << instance.array[i];
         return outputStream;
     }
 
     std::istream& operator>>(std::istream& inputStream, ByteArray& instance)
     {
-        for(size_t i=0; i<instance.second; ++i)
-            inputStream >> instance.first[i];
+        for(size_t i=0; i<instance.length; ++i)
+            inputStream >> instance.array[i];
         return inputStream;
     }
 } // namespace  Krypt

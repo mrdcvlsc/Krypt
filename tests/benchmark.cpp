@@ -42,10 +42,8 @@ static void AES_EncryptECB_100MB(benchmark::State& state) {
     for (auto _ : state)
     {
         // `Krypt::Bytes` is just a typedef for `unsigned char`
-        std::pair<Bytes*,size_t> cipher  = krypt.encrypt(plain.data(),plain.size());
-        std::pair<Bytes*,size_t> recover = krypt.decrypt(cipher.first,cipher.second);
-        delete [] cipher.first;
-        delete [] recover.first;    
+        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
+        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
     }
 }
 BENCHMARK(AES_EncryptECB_100MB);
@@ -71,10 +69,8 @@ static void AES_EncryptCBC_100MB(benchmark::State& state) {
     for (auto _ : state)
     {
         // `Krypt::Bytes` is just a typedef for `unsigned char`
-        std::pair<Bytes*,size_t> cipher  = krypt.encrypt(plain.data(),plain.size());
-        std::pair<Bytes*,size_t> recover = krypt.decrypt(cipher.first,cipher.second);
-        delete [] cipher.first;
-        delete [] recover.first;    
+        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
+        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
     }
 }
 BENCHMARK(AES_EncryptCBC_100MB);
@@ -100,10 +96,8 @@ static void AES_EncryptCBC(benchmark::State& state) {
     for (auto _ : state)
     {
         // `Krypt::Bytes` is just a typedef for `unsigned char`
-        std::pair<Bytes*,size_t> cipher  = krypt.encrypt(plain.data(),plain.size());
-        std::pair<Bytes*,size_t> recover = krypt.decrypt(cipher.first,cipher.second);
-        delete [] cipher.first;
-        delete [] recover.first;    
+        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
+        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
     }
 }
 BENCHMARK(AES_EncryptCBC_100MB);

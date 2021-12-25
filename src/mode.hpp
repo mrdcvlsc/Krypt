@@ -23,8 +23,8 @@ namespace Krypt::Mode
 
             // MODE(size_t blockSize) : Encryption(new CIPHER_TYPE), PaddingScheme(new PADDING_TYPE) {}
 
-            virtual std::pair<Bytes*,size_t> encrypt(Bytes*, size_t) { return {NULL,0}; }
-            virtual std::pair<Bytes*,size_t> decrypt(Bytes*, size_t) { return {NULL,0}; }
+            virtual ByteArray encrypt(Bytes*, size_t) { return {NULL,0}; }
+            virtual ByteArray decrypt(Bytes*, size_t) { return {NULL,0}; }
 
             ~MODE()
             {
@@ -38,8 +38,8 @@ namespace Krypt::Mode
     {
         public:
             ECB(const Bytes* key, size_t keyLen);
-            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
-            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
     };
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
@@ -48,8 +48,8 @@ namespace Krypt::Mode
         public:
             CBC(const Bytes* key, size_t keyLen);
             CBC(const Bytes* key, size_t keyLen, const Bytes* IV);
-            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
-            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
             void setIV(Bytes* IV);
     };
 
@@ -59,8 +59,8 @@ namespace Krypt::Mode
         public:
             CFB(const Bytes* key, size_t keyLen);
             CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
-            std::pair<Bytes*,size_t> encrypt(Bytes* plain, size_t plainLen) override;
-            std::pair<Bytes*,size_t> decrypt(Bytes* cipher, size_t cipherLen) override;
+            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
             void setIV(Bytes* IV);
     };
 }

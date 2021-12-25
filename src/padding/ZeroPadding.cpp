@@ -6,7 +6,7 @@
 
 namespace Krypt::Padding
 {
-    std::pair<Bytes*,size_t> ZeroNulls::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+    ByteArray ZeroNulls::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
     {
         size_t paddings = BLOCKSIZE-(len%BLOCKSIZE);
         size_t paddedLen = paddings+len;
@@ -18,7 +18,7 @@ namespace Krypt::Padding
         return {paddedBlock,paddedLen};
     }
 
-    std::pair<Bytes*,size_t> ZeroNulls::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+    ByteArray ZeroNulls::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
     {
         #ifndef PADDING_CHECK_DISABLE
         if(len<BLOCKSIZE || len%BLOCKSIZE!=0)

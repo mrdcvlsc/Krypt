@@ -12,7 +12,7 @@
 
 namespace Krypt::Padding
 {
-    std::pair<Bytes*,size_t>  ISO_IEC_7816_4::AddPadding(Bytes* src, size_t originalSrcLen, size_t BLOCKSIZE)
+    ByteArray ISO_IEC_7816_4::AddPadding(Bytes* src, size_t originalSrcLen, size_t BLOCKSIZE)
     {
         size_t paddings = BLOCKSIZE-(originalSrcLen%BLOCKSIZE);
         size_t paddedLen = paddings+originalSrcLen;
@@ -25,7 +25,7 @@ namespace Krypt::Padding
         return {paddedBlock,paddedLen};
     }
 
-    std::pair<Bytes*,size_t>  ISO_IEC_7816_4::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+    ByteArray ISO_IEC_7816_4::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
     {
         #ifndef PADDING_CHECK_DISABLE
         if(len<BLOCKSIZE || len%BLOCKSIZE!=0)

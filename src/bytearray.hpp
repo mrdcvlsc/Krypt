@@ -7,12 +7,12 @@
 
 namespace Krypt
 {
-    class ByteArray : public std::pair<Bytes*,size_t>
+    class ByteArray
     {
         public:
 
-        Bytes* array();
-        size_t length();
+        Bytes* array;
+        size_t length;
 
         // returns the pointer array then leaving the member .array() equal to NULL, and .length() equal to zero
         Bytes* detach();
@@ -22,17 +22,19 @@ namespace Krypt
         
         ByteArray();
 
+        ByteArray(Bytes* heap_obj, size_t length);
+
         // copy constructor
         ByteArray(const ByteArray& other);
 
         // move constructor
-        ByteArray(std::pair<Bytes*,size_t>&& other) noexcept;
+        ByteArray(ByteArray&& other) noexcept;
 
-        // assignment operator
-        ByteArray& operator=(ByteArray& other);
+        // copy assignment
+        ByteArray& operator=(const ByteArray& other);
 
         // move assingment
-        ByteArray& operator=(std::pair<Bytes*,size_t>&& other) noexcept;
+        ByteArray& operator=(ByteArray&& other) noexcept;
 
         ~ByteArray();
     };

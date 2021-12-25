@@ -14,36 +14,32 @@ namespace Krypt::Mode
     }
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    std::pair<Bytes*,size_t> ECB<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen)
+    ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen)
     {
-        std::pair<Bytes*,size_t> padded = this->PaddingScheme->AddPadding(plain,plainLen,this->Encryption->BLOCK_SIZE);
+        ByteArray padded = this->PaddingScheme->AddPadding(plain,plainLen,this->Encryption->BLOCK_SIZE);
 
-        Bytes* cipher = new Bytes[padded.second];
-        for(size_t i=0; i<padded.second; i+=this->Encryption->BLOCK_SIZE)
+        Bytes* cipher = new Bytes[padded.length];
+        for(size_t i=0; i<padded.length; i+=this->Encryption->BLOCK_SIZE)
         {
-            this->Encryption->EncryptBlock(padded.first+i,cipher+i);
+            this->Encryption->EncryptBlock(padded.array+i,cipher+i);
         }
 
-        delete [] padded.first;
-        return {cipher,padded.second};
+        return {cipher,padded.length};
     }
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
-    std::pair<Bytes*,size_t> ECB<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen)
+    ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen)
     {
-        std::pair<Bytes*,size_t> recovered;
-        recovered.first = new Bytes[cipherLen];
-        recovered.second = cipherLen;
+        ByteArray recovered;
+        recovered.array = new Bytes[cipherLen];
+        recovered.length = cipherLen;
 
         for(size_t i=0; i<cipherLen; i+=this->Encryption->BLOCK_SIZE)
         {
-            this->Encryption->DecryptBlock(cipher+i,recovered.first+i);
+            this->Encryption->DecryptBlock(cipher+i,recovered.array+i);
         }
 
-        std::pair<Bytes*,size_t> recoverNoPadding = this->PaddingScheme->RemovePadding(recovered.first,recovered.second,this->Encryption->BLOCK_SIZE);
-        
-        delete [] recovered.first;
-        return recoverNoPadding;
+        return this->PaddingScheme->RemovePadding(recovered.array,recovered.length,this->Encryption->BLOCK_SIZE);
     }
 }
 
