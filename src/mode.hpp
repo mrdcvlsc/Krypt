@@ -13,7 +13,7 @@ namespace Krypt::Mode
     {
         public:
             BlockCipher::BASE_BLOCKCIPHER* Encryption;
-            Padding::ZeroNulls* PaddingScheme;
+            Padding::NoPadding* PaddingScheme;
 
             MODE()
             {

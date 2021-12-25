@@ -26,24 +26,38 @@ namespace Krypt::Padding
     };
 
     /// default & base class for padding - pad the src with zeros
-    class ZeroNulls
+    class NoPadding
+    {
+        public:
+        
+        /** does nothing obviously **/
+        virtual std::pair<Bytes*,size_t> AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE);
+        
+        /** does nothing obviously **/
+        virtual std::pair<Bytes*,size_t> RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
+
+            virtual ~NoPadding() = default;
+    };
+
+    /// default & base class for padding - pad the src with zeros
+    class ZeroNulls : public NoPadding
     {
         public:
         
         /** Pad the last block with zeros [reallocates memory]
          * returns the new length of the padded `src`
          * **/
-        virtual std::pair<Bytes*,size_t> AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE);
+        std::pair<Bytes*,size_t> AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE);
         
         /** Removes the last 16 byte zeros [reallocates memory]
          * returns the new length of the un-padded `src`
          * **/
-        virtual std::pair<Bytes*,size_t> RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
+        std::pair<Bytes*,size_t> RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
 
-            virtual ~ZeroNulls() = default;
+        ~ZeroNulls() = default;
     };
 
-    class ANSI_X9_23 : public ZeroNulls
+    class ANSI_X9_23 : public NoPadding
     {
         public:
 
@@ -60,7 +74,7 @@ namespace Krypt::Padding
         ~ANSI_X9_23() {}
     };
 
-    class ISO_IEC_7816_4 : public ZeroNulls
+    class ISO_IEC_7816_4 : public NoPadding
     {
         public:
 
@@ -78,7 +92,7 @@ namespace Krypt::Padding
         ~ISO_IEC_7816_4() {}
     };
 
-    class PKCS_5_7 : public ZeroNulls
+    class PKCS_5_7 : public NoPadding
     {
         public:
 
@@ -97,6 +111,7 @@ namespace Krypt::Padding
     };
 }
 
+#include "padding/NoPadding.cpp"
 #include "padding/ANSI_X9_23.cpp"
 #include "padding/ISO_IEC_7816_4.cpp"
 #include "padding/PKCS_5_7.cpp"
