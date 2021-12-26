@@ -64,13 +64,13 @@ static void AES_EncryptCBC_100MB(benchmark::State& state) {
         0xf8, 0x99, 0x8a, 0x7b, 0x6c, 0x5d, 0x4e, 0x3f
     };
 
-    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key),iv);
+    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
 
     for (auto _ : state)
     {
         // `Krypt::Bytes` is just a typedef for `unsigned char`
-        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
-        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
+        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size(),iv);
+        ByteArray recover = krypt.decrypt(cipher.array,cipher.length,iv);   
     }
 }
 BENCHMARK(AES_EncryptCBC_100MB);
@@ -91,13 +91,13 @@ static void AES_EncryptCBC(benchmark::State& state) {
         0xf8, 0x99, 0x8a, 0x7b, 0x6c, 0x5d, 0x4e, 0x3f
     };
 
-    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key),iv);
+    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
 
     for (auto _ : state)
     {
         // `Krypt::Bytes` is just a typedef for `unsigned char`
-        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
-        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
+        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size(),iv);
+        ByteArray recover = krypt.decrypt(cipher.array,cipher.length,iv);   
     }
 }
 BENCHMARK(AES_EncryptCBC_100MB);
