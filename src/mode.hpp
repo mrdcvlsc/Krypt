@@ -23,8 +23,8 @@ namespace Krypt::Mode
 
             // MODE(size_t blockSize) : Encryption(new CIPHER_TYPE), PaddingScheme(new PADDING_TYPE) {}
 
-            virtual ByteArray encrypt(Bytes*, size_t) { return {NULL,0}; }
-            virtual ByteArray decrypt(Bytes*, size_t) { return {NULL,0}; }
+            virtual ByteArray encrypt(Bytes*, size_t, Bytes*) { return {NULL,0}; }
+            virtual ByteArray decrypt(Bytes*, size_t, Bytes*) { return {NULL,0}; }
 
             ~MODE()
             {
@@ -38,8 +38,8 @@ namespace Krypt::Mode
     {
         public:
             ECB(const Bytes* key, size_t keyLen);
-            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
-            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
+            ByteArray encrypt(Bytes* plain, size_t plainLen, Bytes* iv=NULL) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv=NULL) override;
     };
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
@@ -47,10 +47,8 @@ namespace Krypt::Mode
     {
         public:
             CBC(const Bytes* key, size_t keyLen);
-            CBC(const Bytes* key, size_t keyLen, const Bytes* IV);
-            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
-            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
-            void setIV(Bytes* IV);
+            ByteArray encrypt(Bytes* plain, size_t plainLen, Bytes* iv) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv) override;
     };
 
     template<typename CIPHER_TYPE, typename PADDING_TYPE>
@@ -58,10 +56,8 @@ namespace Krypt::Mode
     {
         public:
             CFB(const Bytes* key, size_t keyLen);
-            CFB(const Bytes* key, size_t keyLen, const Bytes* IV);
-            ByteArray encrypt(Bytes* plain, size_t plainLen) override;
-            ByteArray decrypt(Bytes* cipher, size_t cipherLen) override;
-            void setIV(Bytes* IV);
+            ByteArray encrypt(Bytes* plain, size_t plainLen, Bytes* iv) override;
+            ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv) override;
     };
 }
 

@@ -506,9 +506,9 @@ TEST(ModeCBC, CBC_ZeroNulls_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -529,9 +529,9 @@ TEST(ModeCBC, CBC_PKCS_5_7_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -552,9 +552,9 @@ TEST(ModeCBC, CBC_ISO_IEC_7816_4_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -575,9 +575,9 @@ TEST(ModeCBC, CBC_ANSI_X9_23_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -601,9 +601,9 @@ TEST(ModeCBC, CBC_ZeroNulls_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -625,9 +625,9 @@ TEST(ModeCBC, CBC_PKCS_5_7_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -649,9 +649,9 @@ TEST(ModeCBC, CBC_ISO_IEC_7816_4_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -673,9 +673,9 @@ TEST(ModeCBC, CBC_ANSI_X9_23_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -700,9 +700,9 @@ TEST(ModeCBC, CBC_ZeroNulls_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -725,9 +725,9 @@ TEST(ModeCBC, CBC_PKCS_5_7_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -750,9 +750,9 @@ TEST(ModeCBC, CBC_ISO_IEC_7816_4_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -775,9 +775,9 @@ TEST(ModeCBC, CBC_ANSI_X9_23_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CBC<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -802,9 +802,9 @@ TEST(ModeCFB, CFB_ZeroNulls_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -825,9 +825,9 @@ TEST(ModeCFB, CFB_PKCS_5_7_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -848,9 +848,9 @@ TEST(ModeCFB, CFB_ISO_IEC_7816_4_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -871,9 +871,9 @@ TEST(ModeCFB, CFB_ANSI_X9_23_AES128)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -897,9 +897,9 @@ TEST(ModeCFB, CFB_ZeroNulls_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -921,9 +921,9 @@ TEST(ModeCFB, CFB_PKCS_5_7_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -945,9 +945,9 @@ TEST(ModeCFB, CFB_ISO_IEC_7816_4_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -969,9 +969,9 @@ TEST(ModeCFB, CFB_ANSI_X9_23_AES192)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -996,9 +996,9 @@ TEST(ModeCFB, CFB_ZeroNulls_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ZeroNulls> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -1021,9 +1021,9 @@ TEST(ModeCFB, CFB_PKCS_5_7_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::PKCS_5_7> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -1046,9 +1046,9 @@ TEST(ModeCFB, CFB_ISO_IEC_7816_4_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ISO_IEC_7816_4> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
@@ -1071,9 +1071,9 @@ TEST(ModeCFB, CFB_ANSI_X9_23_AES256)
       0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
   };
 
-  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey),iv);
-  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain));
-  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length);
+  Krypt::Mode::CFB<Krypt::BlockCipher::AES,Krypt::Padding::ANSI_X9_23> EncScheme(aeskey,sizeof(aeskey));
+  Krypt::ByteArray encrypted = EncScheme.encrypt(plain,sizeof(plain),iv);
+  Krypt::ByteArray decrypted = EncScheme.decrypt(encrypted.array,encrypted.length,iv);
 
   ASSERT_FALSE(memcmp(decrypted.array,plain,decrypted.length));
 }
