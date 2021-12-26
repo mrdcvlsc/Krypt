@@ -16,7 +16,7 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 ***To get the peak performance of this portable library compile it with the flags ```-O3 -march=native```***
 
-***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.```***
+***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.***
 
 **sample program:**
 ```c++
@@ -43,7 +43,6 @@ int main()
 
     Mode::ECB<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
 
-    // `Krypt::Bytes` is just a typedef for `unsigned char`
     ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
     ByteArray recover = krypt.decrypt(cipher.array(),cipher.length());
 }
@@ -70,7 +69,6 @@ int main()
 **Methods of the Classes inside the ```Mode``` namespace**
 - ```encrypt()```
 - ```decrypt()```
-- ```setIV()```
 
 **Methods of the Classes inside the ```BlockCipher``` namespace**
 - ```EncryptBlock()```
