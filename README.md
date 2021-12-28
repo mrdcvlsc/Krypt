@@ -44,7 +44,7 @@ int main()
     Mode::ECB<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
 
     ByteArray cipher  = krypt.encrypt(plain,sizeof(plain));
-    ByteArray recover = krypt.decrypt(cipher.array(),cipher.length());
+    ByteArray recover = krypt.decrypt(cipher.array,cipher.length);
 }
 ```
 
