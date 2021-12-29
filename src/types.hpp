@@ -12,6 +12,7 @@ std::cout << PRINT_HEX_PARAM << "\n"
 
 namespace Krypt
 {
+    /// Just a typedef for the unsigned char type.
     typedef unsigned char Bytes;
 
     static const Bytes sbox[256] = {
@@ -52,7 +53,7 @@ namespace Krypt
         0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d,
     };
 
-    /// Galois Multiplication lookup tables
+    // Galois Multiplication lookup tables
     static const Bytes GF_MUL_TABLE[15][256] = {
 
         {},{},

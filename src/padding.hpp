@@ -25,32 +25,32 @@ namespace Krypt::Padding
         const char* what() const throw ();
     };
 
-    /// default & base class for padding - pad the src with zeros
+    /// default & base class for padding - pad the src with zeros.
     class NoPadding
     {
         public:
         
-        /** does nothing obviously **/
+        /** does nothing obviously. **/
         virtual ByteArray AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE);
         
-        /** does nothing obviously **/
+        /** does nothing obviously. **/
         virtual ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
 
             virtual ~NoPadding() = default;
     };
 
-    /// default & base class for padding - pad the src with zeros
+    /// default & base class for padding - pad the src with zeros.
     class ZeroNulls : public NoPadding
     {
         public:
         
-        /** Pad the last block with zeros [reallocates memory]
-         * returns the new length of the padded `src`
+        /** Pad the last block with zeros [reallocates memory].
+         * @return padded ByteArray generated from src.
          * **/
         ByteArray AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE);
         
-        /** Removes the last 16 byte zeros [reallocates memory]
-         * returns the new length of the un-padded `src`
+        /** Removes the last 16 byte zeros [reallocates memory].
+         * @return padded ByteArray generated from src.
          * **/
         ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
 
@@ -61,13 +61,13 @@ namespace Krypt::Padding
     {
         public:
 
-        /** Pad the `src` with zeros first, then sets the last byte value to the count of paddings added [reallocates memory]
-         * returns the new length of the padded `src`
+        /** Pad the `src` with zeros first, then sets the last byte value to the count of paddings added [reallocates memory].
+         * @return padded ByteArray generated from src.
          * **/
         ByteArray AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
         
-        /** Removes the number of bytes [reallocates memory]
-         * returns the new length of the un-padded `src`
+        /** Removes the number of bytes [reallocates memory].
+         * @returns padded ByteArray generated from src.
          * **/
         ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
 
@@ -78,14 +78,14 @@ namespace Krypt::Padding
     {
         public:
 
-        /** Adds one `0x80` byte value, then pad the next remaining spaces with zeros [reallocates memory]
-         * returns the new length of the padded `src`
+        /** Adds one `0x80` byte value, then pad the next remaining spaces with zeros [reallocates memory].
+         * @return padded ByteArray generated from src.
          * **/
         ByteArray AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
         
-        /** removes padding [reallocates memory]
-         * - figures out the padding size by checking the sequence of zeros from the least significant to the most significant byte until it hits `0x80` byte value
-         * returns the new length of the unpadded `src`
+        /** removes padding [reallocates memory].
+         * - figures out the padding size by checking the sequence of zeros from the least significant to the most significant byte until it hits `0x80` byte value.
+         * @return padded ByteArray generated from src.
          * **/
         ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
 
@@ -96,14 +96,14 @@ namespace Krypt::Padding
     {
         public:
 
-        /** Pad the `src` with the value of the padding count itself [reallocates memory]
-         * returns the new length of the padded `src`
+        /** Pad the `src` with the value of the padding count itself [reallocates memory].
+         * @return the new length of the padded `src`.
          * **/
         ByteArray AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
         
-        /** removes padding [reallocates memory]
-         * - figures out the padding size by getting the value of the last byte
-         * returns the new length of the un-padded `src`
+        /** removes padding [reallocates memory].
+         * - figures out the padding size by getting the value of the last byte.
+         * @return the new length of the un-padded `src`.
          * **/
         ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE) override;
 

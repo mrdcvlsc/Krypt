@@ -12,7 +12,6 @@ namespace Krypt::BlockCipher
     class BASE_BLOCKCIPHER
     {
         public:
-            //  BLOCK_SIZE IN BYTES
             size_t BLOCK_SIZE;
 
             BASE_BLOCKCIPHER(size_t blockSize) : BLOCK_SIZE(blockSize) {}
@@ -23,7 +22,11 @@ namespace Krypt::BlockCipher
             virtual ~BASE_BLOCKCIPHER() = default;
     };
 
-    /// @def AES BLOCK CIPHER, ENCRYPTION - DECRYPTION OF 16 BYTES BLOCK
+    /// Advance Encryption Standard.
+    ///
+    /// provides method of encryption and decryption.
+    /// @warning the method of this class only operates on a 16 byte array of unsigned char* or Bytes*
+    /// if you pass an array of unsigned char* in the method with less than 16 elements in it that will cause an access overflow.
     class AES : public BASE_BLOCKCIPHER
     {
         private:
@@ -48,14 +51,28 @@ namespace Krypt::BlockCipher
 
         public:
 
-            /// encrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
+            /// encrypts a fixed 16 byte block from `src` into `dest`.
+            /// @param src a pointer to an array of unsigned char*/Bytes* in heap this is
+            /// the array you want to encrypt.
+            /// @param dest another pointer to an array of unsigned char*/Bytes* in heap
+            /// this is the array where the encrypted block will be stored.
             void EncryptBlock(Bytes *src, Bytes *dest) override;
 
-            /// decrypts a fixed 16 byte block from `src` into `dest` | param types : [unsigned char*/Krypt::Bytes*]
+            /// decrypts a fixed 16 byte block from `src` into `dest`.
+            /// @param src a pointer to an array of unsigned char*/Bytes* in heap this is
+            /// the array you want to decrypt.
+            /// @param dest another pointer to an array of unsigned char*/Bytes* in heap
+            /// this is the array where the decrypted block will be stored.
             void DecryptBlock(Bytes *src, Bytes *dest) override;
 
-            /// initialize the round key from a key
+            /// initialize the round key from a key.
+            ///
+            /// @note this function is automatically called when you initialize and object of AES,
+            /// the only time you want to use or call this member method is when you want to change the
+            /// key and the roundKeys of an instance of an AES class.
             void setKey(const Bytes* key, size_t keyLen);
+
+            /// constructor for AES.
             AES(const Bytes* ByteArray, size_t keyLen);
             ~AES();
     };
