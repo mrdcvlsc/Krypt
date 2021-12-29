@@ -85,3 +85,8 @@ int main()
 - ```operator<<``` - an overload for the left-shift operator
 - ```operator>>``` - an overload for the right-shift operator
 - ```operator[]``` - an overload for the bracket operator, use for indexing the array
+
+
+-----------
+
+[Doxygen Doc Test](https://mrdcvlsc.github.io/Krypt/)
