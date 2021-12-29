@@ -11,10 +11,14 @@ namespace Krypt
     {
         public:
 
+        /// this is the Bytes* or unsigned char* that contains the elements of the array
         Bytes* array;
+
+        /// the total element of the in the array
         size_t length;
 
-        // returns the pointer array then leaving the member .array() equal to NULL, and .length() equal to zero
+        /// detach the heap allocated pointer inside of the ByteArray class instance.
+        /// @return raw pointer of unsigned char* or Bytes*.
         Bytes* detach();
 
         Bytes& operator[](size_t i);
