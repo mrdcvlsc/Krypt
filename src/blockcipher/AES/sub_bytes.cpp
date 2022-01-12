@@ -3,28 +3,31 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt::BlockCipher
+namespace Krypt
 {
-    void AES::SubBytes(unsigned char state[4][4])
+    namespace BlockCipher
     {
-        int i, j;
-        for (i = 0; i < 4; i++)
+        void AES::SubBytes(unsigned char state[4][4])
         {
-            for (j = 0; j < Nb; j++)
+            int i, j;
+            for (i = 0; i < 4; i++)
             {
-                state[i][j] = sbox[state[i][j]];
+                for (j = 0; j < Nb; j++)
+                {
+                    state[i][j] = sbox[state[i][j]];
+                }
             }
         }
-    }
 
-    void AES::InvSubBytes(unsigned char state[4][4])
-    {
-        int i, j;
-        for (i = 0; i < 4; i++)
+        void AES::InvSubBytes(unsigned char state[4][4])
         {
-            for (j = 0; j < Nb; j++)
+            int i, j;
+            for (i = 0; i < 4; i++)
             {
-                state[i][j] = inv_sbox[state[i][j]];
+                for (j = 0; j < Nb; j++)
+                {
+                    state[i][j] = inv_sbox[state[i][j]];
+                }
             }
         }
     }

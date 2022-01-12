@@ -3,16 +3,19 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt::BlockCipher
+namespace Krypt
 {
-    void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key)
+    namespace BlockCipher
     {
-        int i, j;
-        for (i = 0; i < 4; i++)
+        void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key)
         {
-            for (j = 0; j < Nb; j++)
+            int i, j;
+            for (i = 0; i < 4; i++)
             {
-                state[i][j] = state[i][j] ^ key[i + 4 * j];
+                for (j = 0; j < Nb; j++)
+                {
+                    state[i][j] = state[i][j] ^ key[i + 4 * j];
+                }
             }
         }
     }

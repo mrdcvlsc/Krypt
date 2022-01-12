@@ -4,39 +4,42 @@
 #include <iostream>
 #include "../../blockcipher.hpp"
 
-namespace Krypt::BlockCipher
+namespace Krypt
 {
-    void AES::setKey(const Bytes* ByteArray, size_t keyLen)
+    namespace BlockCipher
     {
-        switch (keyLen)
+        void AES::setKey(const Bytes* ByteArray, size_t keyLen)
         {
-          case 16: // AES128
-              this->Nk = 4;
-              this->Nr = 10;
-              break;
-          case 24: // AES192
-              this->Nk = 6;
-              this->Nr = 12;
-              break;
-          case 32: // AES256
-              this->Nk = 8;
-              this->Nr = 14;
-              break;
-          default:
-              throw std::invalid_argument("Incorrect key length");
+            switch (keyLen)
+            {
+            case 16: // AES128
+                this->Nk = 4;
+                this->Nr = 10;
+                break;
+            case 24: // AES192
+                this->Nk = 6;
+                this->Nr = 12;
+                break;
+            case 32: // AES256
+                this->Nk = 8;
+                this->Nr = 14;
+                break;
+            default:
+                throw std::invalid_argument("Incorrect key length");
+            }
+
+            KeyExpansion(ByteArray);
         }
 
-        KeyExpansion(ByteArray);
-    }
+        AES::AES(const Bytes* ByteArray, size_t keyLen) : BASE_BLOCKCIPHER(16)
+        {
+            setKey(ByteArray,keyLen);
+        }
 
-    AES::AES(const Bytes* ByteArray, size_t keyLen) : BASE_BLOCKCIPHER(16)
-    {
-        setKey(ByteArray,keyLen);
-    }
-
-    AES::~AES()
-    {
-        if(RoundedKeys!=NULL) delete [] RoundedKeys;
+        AES::~AES()
+        {
+            if(RoundedKeys!=NULL) delete [] RoundedKeys;
+        }
     }
 }
 
