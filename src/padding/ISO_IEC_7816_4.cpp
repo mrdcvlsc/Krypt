@@ -10,47 +10,50 @@
 8 bytes: FDFDFDFDFDFDFDFD --> FDFDFDFDFDFDFDFD8000000000000000
 */
 
-namespace Krypt::Padding
+namespace Krypt
 {
-    ByteArray ISO_IEC_7816_4::AddPadding(Bytes* src, size_t originalSrcLen, size_t BLOCKSIZE)
+    namespace Padding
     {
-        size_t paddings = BLOCKSIZE-(originalSrcLen%BLOCKSIZE);
-        size_t paddedLen = paddings+originalSrcLen;
-        Bytes* paddedBlock = new Bytes[paddedLen];
-
-        memcpy(paddedBlock, src, originalSrcLen);
-        memset(paddedBlock+originalSrcLen, 0x00, paddings);
-        paddedBlock[originalSrcLen] = 0x80;
-
-        return {paddedBlock,paddedLen};
-    }
-
-    ByteArray ISO_IEC_7816_4::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
-    {
-        #ifndef PADDING_CHECK_DISABLE
-        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        ByteArray ISO_IEC_7816_4::AddPadding(Bytes* src, size_t originalSrcLen, size_t BLOCKSIZE)
         {
-            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
-            throw InvalidPaddedLength("ISO_IEC_7816_4: src's `len` indicates that it was not padded or is corrupted");
+            size_t paddings = BLOCKSIZE-(originalSrcLen%BLOCKSIZE);
+            size_t paddedLen = paddings+originalSrcLen;
+            Bytes* paddedBlock = new Bytes[paddedLen];
+
+            memcpy(paddedBlock, src, originalSrcLen);
+            memset(paddedBlock+originalSrcLen, 0x00, paddings);
+            paddedBlock[originalSrcLen] = 0x80;
+
+            return {paddedBlock,paddedLen};
         }
-        #endif
 
-        size_t i;
-
-        #ifndef PADDING_CHECK_DISABLE
-        for(i=1; i<BLOCKSIZE; ++i)
+        ByteArray ISO_IEC_7816_4::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
         {
-            if(src[len-i]==0x80) break;
-            if(src[len-i]!=0x00)
-                throw InvalidPadding("ISO_IEC_7816_4: does not match the padding scheme used in `src`");
+            #ifndef PADDING_CHECK_DISABLE
+            if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+            {
+                std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+                throw InvalidPaddedLength("ISO_IEC_7816_4: src's `len` indicates that it was not padded or is corrupted");
+            }
+            #endif
+
+            size_t i;
+
+            #ifndef PADDING_CHECK_DISABLE
+            for(i=1; i<BLOCKSIZE; ++i)
+            {
+                if(src[len-i]==0x80) break;
+                if(src[len-i]!=0x00)
+                    throw InvalidPadding("ISO_IEC_7816_4: does not match the padding scheme used in `src`");
+            }
+            #endif
+
+            size_t noPaddingLength = len-i;
+            Bytes* NoPadding = new Bytes[noPaddingLength];
+            memcpy(NoPadding,src,noPaddingLength);
+
+            return {NoPadding,noPaddingLength};
         }
-        #endif
-
-        size_t noPaddingLength = len-i;
-        Bytes* NoPadding = new Bytes[noPaddingLength];
-        memcpy(NoPadding,src,noPaddingLength);
-
-        return {NoPadding,noPaddingLength};
     }
 }
 
