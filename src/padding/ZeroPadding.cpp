@@ -4,45 +4,48 @@
 #include <iostream>
 #include "../padding.hpp"
 
-namespace Krypt::Padding
+namespace Krypt
 {
-    ByteArray ZeroNulls::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+    namespace Padding
     {
-        size_t paddings = BLOCKSIZE-(len%BLOCKSIZE);
-        size_t paddedLen = paddings+len;
-        Bytes* paddedBlock = new Bytes[paddedLen];
-
-        memcpy(paddedBlock, src, len);
-        memset(paddedBlock+len, 0x00, paddings);
-
-        return {paddedBlock,paddedLen};
-    }
-
-    ByteArray ZeroNulls::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
-    {
-        #ifndef PADDING_CHECK_DISABLE
-        if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+        ByteArray ZeroNulls::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
         {
-            std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
-            throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+            size_t paddings = BLOCKSIZE-(len%BLOCKSIZE);
+            size_t paddedLen = paddings+len;
+            Bytes* paddedBlock = new Bytes[paddedLen];
+
+            memcpy(paddedBlock, src, len);
+            memset(paddedBlock+len, 0x00, paddings);
+
+            return {paddedBlock,paddedLen};
         }
-        #endif
 
-        #ifndef PADDING_CHECK_DISABLE
-        if(src[len-1]!=0x00)
-            throw InvalidPadding("ZeroNulls: does not match the padding scheme used in `src`");
-        #endif
+        ByteArray ZeroNulls::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+        {
+            #ifndef PADDING_CHECK_DISABLE
+            if(len<BLOCKSIZE || len%BLOCKSIZE!=0)
+            {
+                std::cerr << "\nA padded `src` should have a `len` greater than and divisible by the `BLOCKSIZE`\n";
+                throw InvalidPaddedLength("ZeroNulls: src's `len` indicates that it was not padded or is corrupted");
+            }
+            #endif
 
-        size_t paddings = 0, noPaddingLength = 0;
-        for(size_t i=0; i<BLOCKSIZE; ++i)
-            if(src[len-1-i]==0x00) paddings++;
-            else break;
+            #ifndef PADDING_CHECK_DISABLE
+            if(src[len-1]!=0x00)
+                throw InvalidPadding("ZeroNulls: does not match the padding scheme used in `src`");
+            #endif
 
-        noPaddingLength = len-paddings;
-        Bytes* NoPadding = new Bytes[noPaddingLength];
-        memcpy(NoPadding,src,noPaddingLength);
-        
-        return {NoPadding,noPaddingLength};
+            size_t paddings = 0, noPaddingLength = 0;
+            for(size_t i=0; i<BLOCKSIZE; ++i)
+                if(src[len-1-i]==0x00) paddings++;
+                else break;
+
+            noPaddingLength = len-paddings;
+            Bytes* NoPadding = new Bytes[noPaddingLength];
+            memcpy(NoPadding,src,noPaddingLength);
+            
+            return {NoPadding,noPaddingLength};
+        }
     }
 }
 

@@ -3,6 +3,10 @@
 
 #include "functions.hpp"
 
+// here the DWORDS is formed from 4 continous elements from a starting index of an unsinged char* array or Bytes*.
+// a DWORD or double-word occupies 32-bits in a memory.
+// the term DWORD is usually used to represent bits inside the eax,edx,...r15d parts of an x86_64 cpu register which can contain 32 bits inside.  
+
 namespace Krypt
 {
     Bytes xtime(Bytes b)    // multiply on x
@@ -10,7 +14,7 @@ namespace Krypt
         return (b << 1) ^ (((b >> 7) & 1) * 0x1b);
     }
 
-    void SubWord(Bytes *a)
+    void SubDWordBytes(Bytes *a)
     {
         int i;
         for (i = 0; i < 4; i++)
@@ -19,7 +23,7 @@ namespace Krypt
         }
     }
 
-    void RotWord(Bytes *a)
+    void RotDWord(Bytes *a)
     {
         Bytes c = a[0];
         a[0] = a[1];
@@ -28,20 +32,20 @@ namespace Krypt
         a[3] = c;
     }
 
-    void XorWords(Bytes *a, Bytes *b, Bytes *c)
+    void XorDWords(Bytes *a, Bytes *b, Bytes *dest)
     {
         int i;
         for (i = 0; i < 4; i++)
         {
-            c[i] = a[i] ^ b[i];
+            dest[i] = a[i] ^ b[i];
         }
     }
 
-    void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *c, unsigned int len)
+    void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *dest, unsigned int len)
     {
         for (unsigned int i = 0; i < len; i++)
         {
-            c[i] = a[i] ^ b[i];
+            dest[i] = a[i] ^ b[i];
         }
     }
 
@@ -79,9 +83,11 @@ namespace Krypt
         return v;
     }
 
-    const unsigned char *VectorToArray(const std::vector<unsigned char>& a)
+    unsigned char *VectorToArray(const std::vector<unsigned char>& a)
     {
-        return a.data();
+        Bytes* cpy = new Bytes[a.size()];
+        memcpy(cpy,a.data(),a.size());
+        return cpy;
     }
 }
 

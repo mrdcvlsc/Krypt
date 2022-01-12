@@ -1,20 +1,22 @@
 ########################## DOCKER ##########################
 
+CXX=g++
+
 FLAGS = -Wall -Wextra
 
 build_all: clean build_test build_debug build_profile build_release
 
 build_test:
-	docker-compose exec aes g++ $(FLAGS) -g -pthread ./src/AES.cpp ./tests/tests.cpp /usr/lib/libgtest.a -o bin/test
+	docker-compose exec aes $(CXX) $(FLAGS) -g -pthread ./src/AES.cpp ./tests/tests.cpp /usr/lib/libgtest.a -o bin/test
 
 build_debug:
-	docker-compose exec aes g++ $(FLAGS) -g ./src/AES.cpp ./dev/main.cpp -o bin/debug
+	docker-compose exec aes $(CXX) $(FLAGS) -g ./src/AES.cpp ./dev/main.cpp -o bin/debug
 
 build_profile:
-	docker-compose exec aes g++ $(FLAGS) -pg ./src/AES.cpp ./dev/main.cpp -o bin/profile
+	docker-compose exec aes $(CXX) $(FLAGS) -pg ./src/AES.cpp ./dev/main.cpp -o bin/profile
 
 build_release:
-	docker-compose exec aes g++ $(FLAGS) -O2 ./src/AES.cpp ./dev/main.cpp -o bin/release
+	docker-compose exec aes $(CXX) $(FLAGS) -O2 ./src/AES.cpp ./dev/main.cpp -o bin/release
 
 test:
 	docker-compose exec aes bin/test
@@ -36,7 +38,7 @@ clean:
 
 gh_bench:
 	mkdir bin
-	g++ tests/benchmark.cpp -lbenchmark -lpthread -o bin/benchmark -O3 -march=native
+	$(CXX) tests/benchmark.cpp -lbenchmark -lpthread -o bin/benchmark -O3 -march=native
 	bin/benchmark
 
 gh_test:
@@ -46,19 +48,19 @@ gh_test:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	g++ -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves
-	g++ -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -fsanitize=address -o bin/test
-	g++ -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni
-	g++ -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test_aesni
+	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves
+	$(CXX) -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -fsanitize=address -o bin/test
+	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni
+	$(CXX) -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test_aesni
 
 compile_debug:
-	g++ -g ./dev/main.cpp -o bin/debug
+	$(CXX) -g ./dev/main.cpp -o bin/debug
 
 compile_profile:
-	g++ -pg ./dev/main.cpp -o bin/profile
+	$(CXX) -pg ./dev/main.cpp -o bin/profile
 
 compile_release:
-	g++ -O2 ./dev/main.cpp -o bin/release
+	$(CXX) -O2 ./dev/main.cpp -o bin/release
 
 run_test:
 	bin/moves
