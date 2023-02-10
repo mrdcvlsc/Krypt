@@ -24,5 +24,8 @@ jobs:
     - name: compile tests
       run: mkdir bin && make compile_test
       
-    - name: run tests
+    - name: run tests GCC
       run: make run_test
+
+    - name: run tests Clang
+      run: make run_test CXX=clang++
