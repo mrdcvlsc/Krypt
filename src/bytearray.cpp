@@ -66,18 +66,17 @@ namespace  Krypt
 
     // copy constructor
     ByteArray::ByteArray(const ByteArray& other)
+    :   array(new Bytes[other.length]),
+        length(other.length)
     {
-        array = new Bytes[other.length];
-        length = other.length;
         memcpy(array,other.array,other.length);
     }
 
     // move constructor
     ByteArray::ByteArray(ByteArray&& other) noexcept
+    :   array(other.array),
+        length(other.length)
     {
-        array = other.array;
-        length = other.length;
-
         other.array = NULL;
         other.length = 0;
     }
@@ -85,30 +84,43 @@ namespace  Krypt
     // copy assignment
     ByteArray& ByteArray::operator=(const ByteArray& other)
     {
-        if(array!=NULL) delete [] array;
+        if (this != &other) {
+            if(array != NULL) {
+                memset((Bytes*) array, 0x00, length);
+                delete [] array;
+            }
 
-        array = new Bytes[other.length];
-        length = other.length;
-        memcpy(array,other.array,other.length);
+            array = new Bytes[other.length];
+            length = other.length;
+            memcpy(array,other.array,other.length);
+        }
         return *this;
     }
 
     // move assingment
     ByteArray& ByteArray::operator=(ByteArray&& other) noexcept
     {
-        if(array!=NULL) delete [] array;
+        if (this != &other) {
+            if(array!=NULL) {
+                memset((Bytes*) array, 0x00, length);
+                delete [] array;
+            }
 
-        array = other.array;
-        length = other.length;
+            array = other.array;
+            length = other.length;
 
-        other.array = NULL;
-        other.length = 0;
+            other.array = NULL;
+            other.length = 0;
+        }
         return *this;
     }
 
     ByteArray::~ByteArray()
     {
-        if(array!=NULL) delete [] array;
+        if(array!=NULL) {
+            memset((Bytes*) array, 0x00, length);
+            delete [] array;
+        }
         length = 0;
     }
 
