@@ -9,7 +9,7 @@ namespace Krypt
     {
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
         CFB<CIPHER_TYPE,PADDING_TYPE>::CFB(const Bytes* key, size_t keyLen)
-            : MODE<CIPHER_TYPE,PADDING_TYPE>()
+            : MODE()
         {
             this->Encryption = new CIPHER_TYPE(key,keyLen);
             this->PaddingScheme = new PADDING_TYPE();

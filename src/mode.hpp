@@ -10,7 +10,6 @@ namespace Krypt
 {
     namespace Mode
     {
-        template<typename CIPHER_TYPE, typename PADDING_TYPE>
         class MODE
         {
             public:
@@ -35,7 +34,7 @@ namespace Krypt
 
         /// Electronic Code Blocking.
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
-        class ECB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+        class ECB : public MODE
         {
             public:
                 ECB(const Bytes* key, size_t keyLen);
@@ -53,7 +52,7 @@ namespace Krypt
 
         /// Cipher Block Chaining.
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
-        class CBC : public MODE<CIPHER_TYPE,PADDING_TYPE>
+        class CBC : public MODE
         {
             public:
                 CBC(const Bytes* key, size_t keyLen);
@@ -71,7 +70,7 @@ namespace Krypt
 
         /// Cipher Feedback.
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
-        class CFB : public MODE<CIPHER_TYPE,PADDING_TYPE>
+        class CFB : public MODE
         {
             public:
                 CFB(const Bytes* key, size_t keyLen);
