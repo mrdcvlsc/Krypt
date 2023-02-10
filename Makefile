@@ -48,9 +48,9 @@ gh_test:
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves
+	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves -fsanitize=address
 	$(CXX) -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -fsanitize=address -o bin/test
-	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni
+	$(CXX) -g -O0 ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni -fsanitize=address
 	$(CXX) -g -O0 ./tests/tests.cpp -D CLASSIC_MAKE -lgtest -lpthread -DUSE_AESNI -maes -fsanitize=address -o bin/test_aesni
 
 compile_debug:
