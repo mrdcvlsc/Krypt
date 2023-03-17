@@ -1,0 +1,48 @@
+name: build-test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  clang:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2019, macos-latest]
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: create test output directory
+      run: mkdir bin
+
+    - name: compile tests
+      run: make compile_test CXX=clang++
+      
+    - name: run tests
+      run: make run_test
+
+  gcc:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-2019, macos-latest]
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: create test output directory
+      run: mkdir bin
+
+    - name: compile tests
+      run: make compile_test
+      
+    - name: run tests
+      run: make run_test

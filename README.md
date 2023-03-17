@@ -8,7 +8,7 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 **This header only library provides AES encryption and decryption algorithms, it has a portable C++ implementation and you can also activate and use the code that utilizes the AES-NI instructions.**
 
-![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/google-test.yml/badge.svg)
+![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/build-test.yml/badge.svg)
 
 -----------
 
