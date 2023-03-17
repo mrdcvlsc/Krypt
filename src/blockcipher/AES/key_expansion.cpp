@@ -13,7 +13,7 @@ namespace Krypt
             Bytes *temp = new Bytes[4];
             Bytes *rcon = new Bytes[4];
 
-            int i = 0;
+            size_t i = 0;
             while (i < 4 * Nk)
             {
                 w[i] = key[i];

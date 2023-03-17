@@ -36,7 +36,7 @@ namespace Krypt
             delete [] tempIV;
             delete [] encIV;
 
-            return {cipher,padded.length};
+            return ByteArray(cipher,padded.length);
         }
 
         template<typename CIPHER_TYPE, typename PADDING_TYPE>

@@ -16,7 +16,7 @@ namespace Krypt
         }
 
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
-        ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen, Bytes* iv)
+        ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::encrypt(Bytes* plain, size_t plainLen, Bytes*)
         {
             ByteArray padded = this->PaddingScheme->AddPadding(plain,plainLen,this->Encryption->BLOCK_SIZE);
 
@@ -26,11 +26,11 @@ namespace Krypt
                 this->Encryption->EncryptBlock(padded.array+i,cipher+i);
             }
 
-            return {cipher,padded.length};
+            return ByteArray(cipher,padded.length);
         }
 
         template<typename CIPHER_TYPE, typename PADDING_TYPE>
-        ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv)
+        ByteArray ECB<CIPHER_TYPE,PADDING_TYPE>::decrypt(Bytes* cipher, size_t cipherLen, Bytes*)
         {
             ByteArray recovered;
             recovered.array = new Bytes[cipherLen];

@@ -38,7 +38,7 @@ namespace Krypt
             /** does nothing obviously. **/
             virtual ByteArray RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE);
 
-                virtual ~NoPadding() = default;
+            virtual ~NoPadding() = default;
         };
 
         /// default & base class for padding - pad the src with zeros.

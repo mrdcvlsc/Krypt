@@ -38,7 +38,9 @@ namespace Krypt
 
         AES::~AES()
         {
-            if(RoundedKeys!=NULL) delete [] RoundedKeys;
+            if(RoundedKeys!=NULL) {
+                delete [] RoundedKeys;
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Krypt
             memset(paddedBlock+originalSrcLen, 0x00, paddings);
             paddedBlock[originalSrcLen] = 0x80;
 
-            return {paddedBlock,paddedLen};
+            return ByteArray(paddedBlock,paddedLen);
         }
 
         ByteArray ISO_IEC_7816_4::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
@@ -42,9 +42,13 @@ namespace Krypt
             #ifndef PADDING_CHECK_DISABLE
             for(i=1; i<BLOCKSIZE; ++i)
             {
-                if(src[len-i]==0x80) break;
-                if(src[len-i]!=0x00)
+                if(src[len-i]==0x80) {
+                    break;
+                }
+
+                if(src[len-i]!=0x00) {
                     throw InvalidPadding("ISO_IEC_7816_4: does not match the padding scheme used in `src`");
+                }
             }
             #endif
 
@@ -52,7 +56,7 @@ namespace Krypt
             Bytes* NoPadding = new Bytes[noPaddingLength];
             memcpy(NoPadding,src,noPaddingLength);
 
-            return {NoPadding,noPaddingLength};
+            return ByteArray(NoPadding,noPaddingLength);
         }
     }
 }

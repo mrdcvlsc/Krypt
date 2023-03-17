@@ -17,18 +17,17 @@ namespace  Krypt
     const Bytes& ByteArray::operator[](size_t i) const
     {
         #ifndef INDEX_CHECK_DISABLE
-        if(length==0)
+        if(length==0) {
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       accessing an empty byte array");
-        if(i<0)
-            throw std::underflow_error(
-                "Krypt::ByteArray[] :"
-                "       the index given for operator[] is less-than zero");
-        if(i>=length)
+        }
+        
+        if(i>=length) {
             throw std::overflow_error(
                 "Krypt::ByteArray[] :"
                 "       index given for operator[] is greater-than ByteArray.length()-1");
+        }
         #endif
         return array[i];
     }
@@ -36,18 +35,17 @@ namespace  Krypt
     Bytes& ByteArray::operator[](size_t i)
     {
         #ifndef INDEX_CHECK_DISABLE
-        if(length==0)
+        if(length==0) {
             throw std::underflow_error(
                 "Krypt::ByteArray[] :"
                 "       accessing an empty byte array");
-        if(i<0)
-            throw std::underflow_error(
-                "Krypt::ByteArray[] :"
-                "       the index given for operator[] is less-than zero");
-        if(i>=length)
+        }
+        
+        if(i>=length) {
             throw std::overflow_error(
                 "Krypt::ByteArray[] :"
                 "       index given for operator[] is greater-than ByteArray.length()-1");
+        }
         #endif
         return array[i];
     }
@@ -126,15 +124,17 @@ namespace  Krypt
 
     std::ostream& operator<<(std::ostream& outputStream, const ByteArray& instance)
     {
-        for(size_t i=0; i<instance.length; ++i)
-                outputStream << instance.array[i];
+        for(size_t i=0; i<instance.length; ++i) {
+            outputStream << instance.array[i];
+        }
         return outputStream;
     }
 
     std::istream& operator>>(std::istream& inputStream, ByteArray& instance)
     {
-        for(size_t i=0; i<instance.length; ++i)
+        for(size_t i=0; i<instance.length; ++i) {
             inputStream >> instance.array[i];
+        }
         return inputStream;
     }
 } // namespace  Krypt

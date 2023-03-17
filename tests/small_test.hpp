@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <iomanip>
 
 namespace smlts {
 
@@ -99,7 +100,21 @@ namespace smlts {
     print_passed_failed(result, test_name);
 
 #ifndef _DISABLE_PRINT_SUBJECTS
-    std::cout << std::hex << "  ->  " << a << " == " << b << "\n";
+
+    auto             prev_ios_width = std::cout.width();
+    auto             prev_ios_fill = std::cout.fill();
+    constexpr size_t padding = sizeof(unsigned char) * 2;
+
+    std::cout << "  ->  " << std::hex;
+    for (size_t i = 0; i < numBytes; ++i) {
+      std::cout << std::setfill('0') << std::setw(padding) << std::right << (unsigned int) a[i] << " ";
+    }
+    std::cout << " == ";
+    for (size_t i = 0; i < numBytes; ++i) {
+      std::cout << std::setfill('0') << std::setw(padding) << std::right << (unsigned int) b[i] << " ";
+    }
+    std::cout << std::setfill(prev_ios_fill) << std::setw(prev_ios_width) << std::dec;
+    std::cout << "\n";
 #endif
   }
 

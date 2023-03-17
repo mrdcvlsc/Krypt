@@ -24,7 +24,7 @@ namespace Krypt
             memset(paddedBlock+len, 0x00, paddings);
             paddedBlock[paddedLen-1] = static_cast<Bytes>(paddings);
 
-            return {paddedBlock,paddedLen};
+            return ByteArray(paddedBlock, paddedLen);
         }
 
         ByteArray ANSI_X9_23::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
@@ -43,15 +43,16 @@ namespace Krypt
             #ifndef PADDING_CHECK_DISABLE
             for(size_t i=1; i<paddings; ++i)
             {
-                if(src[len-1-i]!=0x00)
+                if(src[len-1-i]!=0x00) {
                     throw InvalidPadding("ANSI_X9_23: does not match the padding scheme used in `src`");
+                }
             }
             #endif
             
             Bytes* NoPadding = new Bytes[noPaddingLength];
             memcpy(NoPadding,src,noPaddingLength);
 
-            return {NoPadding,noPaddingLength};
+            return ByteArray(NoPadding,noPaddingLength);
         }
     }
 }

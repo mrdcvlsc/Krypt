@@ -32,7 +32,7 @@ namespace Krypt
             }
 
             delete [] tempIV;
-            return {cipher,padded.length};
+            return ByteArray(cipher,padded.length);
         }
 
         template<typename CIPHER_TYPE, typename PADDING_TYPE>

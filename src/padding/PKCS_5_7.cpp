@@ -25,7 +25,7 @@ namespace Krypt
             memcpy(paddedBlock, src, len);
             memset(paddedBlock+len, static_cast<Bytes>(paddings), paddings);
 
-            return {paddedBlock,paddedLen};
+            return ByteArray(paddedBlock,paddedLen);
         }
 
         ByteArray PKCS_5_7::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
@@ -45,15 +45,16 @@ namespace Krypt
             Bytes checkchar = static_cast<Bytes>(paddings);
             for(size_t i=1; i<paddings; ++i)
             {
-                if(src[len-1-i]!=checkchar)
+                if(src[len-1-i]!=checkchar) {
                     throw InvalidPadding("PKCS_5_7: does not match the padding scheme used in `src`");
+                }
             }
             #endif
 
             Bytes* NoPadding = new Bytes[noPaddingLength];
             memcpy(NoPadding,src,noPaddingLength);
             
-            return {NoPadding,noPaddingLength};
+            return ByteArray(NoPadding,noPaddingLength);
         }
     }
 }

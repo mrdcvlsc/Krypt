@@ -11,18 +11,18 @@ namespace Krypt
         const char* InvalidPadding::what() const throw () { return msg; }
         const char* InvalidPaddedLength::what() const throw () { return msg; }
 
-        ByteArray NoPadding::AddPadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+        ByteArray NoPadding::AddPadding(Bytes* src, size_t len, size_t)
         {
             Bytes* Copy = new Bytes[len];
             memcpy(Copy,src,len);
-            return {Copy,len};
+            return ByteArray(Copy,len);
         }
 
-        ByteArray NoPadding::RemovePadding(Bytes* src, size_t len, size_t BLOCKSIZE)
+        ByteArray NoPadding::RemovePadding(Bytes* src, size_t len, size_t)
         {
             Bytes* Copy = new Bytes[len];
             memcpy(Copy,src,len);
-            return {Copy,len};
+            return ByteArray(Copy,len);
         }
     }
 }
