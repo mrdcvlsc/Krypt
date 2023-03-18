@@ -22,8 +22,8 @@ namespace Krypt
                     PaddingScheme = NULL;
                 }
 
-                virtual ByteArray encrypt(Bytes*, size_t, Bytes*) { return {NULL,0}; }
-                virtual ByteArray decrypt(Bytes*, size_t, Bytes*) { return {NULL,0}; }
+                virtual ByteArray encrypt(Bytes*, size_t, Bytes*) = 0;
+                virtual ByteArray decrypt(Bytes*, size_t, Bytes*) = 0;
 
                 ~MODE()
                 {

@@ -18,8 +18,8 @@ namespace Krypt
 
                 BASE_BLOCKCIPHER(size_t blockSize) : BLOCK_SIZE(blockSize) {}
 
-                virtual void EncryptBlock(Bytes*, Bytes*) {};
-                virtual void DecryptBlock(Bytes*, Bytes*) {};
+                virtual void EncryptBlock(Bytes*, Bytes*) = 0;
+                virtual void DecryptBlock(Bytes*, Bytes*) = 0;
 
                 virtual ~BASE_BLOCKCIPHER() = default;
         };
