@@ -4,6 +4,13 @@
 #include <iostream>
 #include <cstring>
 #include <exception>
+
+#ifdef USE_AESNI
+#include <stdio.h>
+#include <immintrin.h>
+#include <bitset>
+#endif
+
 #include "types.hpp"
 #include "functions.hpp"
 
@@ -36,7 +43,11 @@ namespace Krypt
                 const static size_t Nb = 4;
                 size_t Nk;
                 size_t Nr;
+#ifdef USE_AESNI
+                __m128i *RoundedKeys;
+#else
                 Bytes *RoundedKeys;
+#endif
 
                 void KeyExpansion(const Bytes* key);
 

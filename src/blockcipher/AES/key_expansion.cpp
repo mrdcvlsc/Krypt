@@ -1,6 +1,12 @@
 #ifndef KEY_EXPANSION_CPP
 #define KEY_EXPANSION_CPP
 
+#ifdef USE_AESNI
+#include <stdio.h>
+#include <immintrin.h>
+#include <bitset>
+#endif
+
 #include "../../blockcipher.hpp"
 
 namespace Krypt
@@ -50,7 +56,22 @@ namespace Krypt
             delete []rcon;
             delete []temp;
 
+#ifndef USE_AESNI
             RoundedKeys = w;
+#else
+            size_t RoundKeySize = Nr + 1;
+            RoundedKeys = new __m128i[RoundKeySize];
+
+            RoundedKeys[0] = _mm_loadu_si128((__m128i*) &w[0]);
+
+            for (size_t i = 1; i < RoundKeySize; ++i) {
+                RoundedKeys[i] = _mm_loadu_si128((__m128i*) &w[i*4*Nb]);
+            }
+
+            RoundedKeys[Nr] = _mm_loadu_si128((__m128i*) &w[Nr*4*Nb]);
+
+            delete [] w;
+#endif
         }
     }
 }

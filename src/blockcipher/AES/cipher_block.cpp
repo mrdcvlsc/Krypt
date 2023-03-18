@@ -16,9 +16,9 @@ namespace Krypt
             #ifdef USE_AESNI
             switch (Nr)
             {
-            case 10: Aes128BlockEncrypt(src,dest,RoundedKeys,Nr,Nb); break;
-            case 12: Aes192BlockEncrypt(src,dest,RoundedKeys,Nr,Nb); break;
-            case 14: Aes256BlockEncrypt(src,dest,RoundedKeys,Nr,Nb); break;
+            case 10: Aes128BlockEncrypt(src, dest, RoundedKeys); break;
+            case 12: Aes192BlockEncrypt(src, dest, RoundedKeys); break;
+            case 14: Aes256BlockEncrypt(src, dest, RoundedKeys); break;
             default: throw std::invalid_argument("Incorrect key length");
             }
             #else
@@ -64,9 +64,9 @@ namespace Krypt
             #ifdef USE_AESNI
             switch (Nr)
             {
-            case 10: Aes128BlockDecrypt(src,dest,RoundedKeys,Nr,Nb); break;
-            case 12: Aes192BlockDecrypt(src,dest,RoundedKeys,Nr,Nb); break;
-            case 14: Aes256BlockDecrypt(src,dest,RoundedKeys,Nr,Nb); break;
+            case 10: Aes128BlockDecrypt(src, dest, RoundedKeys); break;
+            case 12: Aes192BlockDecrypt(src, dest, RoundedKeys); break;
+            case 14: Aes256BlockDecrypt(src, dest, RoundedKeys); break;
             default: throw std::invalid_argument("Incorrect key length");
             }
             #else
