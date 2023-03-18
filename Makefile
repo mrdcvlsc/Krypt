@@ -10,14 +10,19 @@ endif
 
 ########################## CLASSIC MAKEFILE ##########################
 
-gh_bench:
-	mkdir bin
-	$(CXX) tests/benchmark.cpp -lbenchmark -lpthread -o bin/benchmark -O3 -march=native
-	bin/benchmark
-
-gh_test:
-	mkdir bin
-	make compile_test
+bench:
+	@echo "compiling benchmark : START"
+	@$(CXX) tests/benchmark.cpp -o bin/benchmark.out -O3
+	@echo "compiling benchmark : DONE"
+	@echo "# Benchmark" > benchmark-$(CXX).md
+	@echo "" >> benchmark-$(CXX).md
+	@echo "Compiler : $(CXX)" >> benchmark-$(CXX).md
+	@echo "" >> benchmark-$(CXX).md
+	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> benchmark-$(CXX).md
+	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> benchmark-$(CXX).md
+	@echo "running benchmark : START"
+	@./bin/benchmark.out >> benchmark-$(CXX).md
+	@echo "running benchmark : DONE"
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
 

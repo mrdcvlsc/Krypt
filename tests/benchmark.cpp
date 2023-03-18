@@ -1,105 +1,368 @@
 #include <iostream>
-#include <benchmark/benchmark.h>
-
-#include <iostream>
 #include <chrono>
 #include <random>
-#include <vector>
+#include <iomanip>
+#include <cmath>
 #include "../src/Krypt.hpp"
 
 using namespace Krypt;
 
-#define MB(N) N*1024*1024
+int main() {
+  // create random plain text
+  size_t MB = 100;
+  size_t bytes = MB * 1024 * 1024;
 
-std::vector<unsigned char> randomArray(size_t n)
-{
-    unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
-    std::mt19937_64 rand_engine(seed);
-    std::uniform_int_distribution<int> random_number(0,255);
+  unsigned char *plainText = new unsigned char[bytes];
 
-    std::vector<unsigned char> randomValues;
-    randomValues.reserve(n);
+  unsigned seed = std::chrono::steady_clock::now().time_since_epoch().count();
+  std::mt19937_64 rand_engine(seed);
 
-    for(size_t i=0; i<n; ++i)
-        randomValues.push_back(static_cast<unsigned char>(random_number(rand_engine)));
+  auto min = std::numeric_limits<unsigned char>::min();
+  auto max = std::numeric_limits<unsigned char>::max();
 
-    return randomValues;
-}
+  std::uniform_int_distribution<unsigned char> random_number(min, max);
 
-static void AES_EncryptECB_100MB(benchmark::State& state) {
+  for (size_t i = 0; i < bytes; ++i) {
+    plainText[i] = random_number(rand_engine);
+  }
 
-    std::vector<unsigned char> plain = randomArray(MB(10));
+  // encryption
+  unsigned char aes128Key[16] = {
+    0xde, 0xed, 0xbe, 0xef, 0xca, 0xfe, 0xba, 0xbe,
+    0xfe, 0xed, 0xbe, 0xef, 0xde, 0xad, 0xde, 0xed
+  };
 
-    // if you want to AES192 or AES256, just increase the size of the key array
-    // the AES class will automatically detect it
-    unsigned char aes128key[] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-    };
+  unsigned char aes192Key[24] = {
+    0xde, 0xed, 0xbe, 0xef, 0xca, 0xfe, 0xba, 0xbe,
+    0xfe, 0xed, 0xbe, 0xef, 0xde, 0xad, 0xde, 0xed,
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07
+  };
 
-    Mode::ECB<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
+  unsigned char aes256Key[32] = {
+    0xde, 0xed, 0xbe, 0xef, 0xca, 0xfe, 0xba, 0xbe,
+    0xfe, 0xed, 0xbe, 0xef, 0xde, 0xad, 0xde, 0xed,
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+    0xff, 0x00, 0xff, 0x00, 0xff, 0x00, 0xff, 0xbb
+  };
 
-    for (auto _ : state)
-    {
-        // `Krypt::Bytes` is just a typedef for `unsigned char`
-        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size());
-        ByteArray recover = krypt.decrypt(cipher.array,cipher.length);   
+  // ECB
+  {
+    Mode::ECB<BlockCipher::AES, Padding::ANSI_X9_23> aes128(aes128Key, sizeof(aes128Key));
+    Mode::ECB<BlockCipher::AES, Padding::ANSI_X9_23> aes192(aes192Key, sizeof(aes192Key));
+    Mode::ECB<BlockCipher::AES, Padding::ANSI_X9_23> aes256(aes256Key, sizeof(aes256Key));
+
+    // ########################## AES 128 ########################## 
+    auto aes128EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128cipher = aes128.encrypt(plainText, bytes);
+    auto aes128EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
+
+    auto aes128DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length);
+    auto aes128DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
+
+    std::string aes128res = "success";
+
+    if (aes128recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes128recover.array[i] != plainText[i]) {
+          aes128res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes128res = "failed";
     }
-}
-BENCHMARK(AES_EncryptECB_100MB);
 
-static void AES_EncryptCBC_100MB(benchmark::State& state) {
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Enc | ECB | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Dec | ECB | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
 
-    std::vector<unsigned char> plain = randomArray(MB(10));
+    // ########################## AES 192 ########################## 
+    auto aes192EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192cipher = aes192.encrypt(plainText, bytes);
+    auto aes192EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
 
-    // if you want to AES192 or AES256, just increase the size of the key array
-    // the AES class will automatically detect it
-    unsigned char aes128key[] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-    };
+    auto aes192DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length);
+    auto aes192DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
 
-    unsigned char iv[] = {
-        0xa0, 0xb1, 0xc2, 0xd3, 0xe4, 0xf5, 0x16, 0x27,
-        0xf8, 0x99, 0x8a, 0x7b, 0x6c, 0x5d, 0x4e, 0x3f
-    };
+    std::string aes192res = "success";
 
-    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
-
-    for (auto _ : state)
-    {
-        // `Krypt::Bytes` is just a typedef for `unsigned char`
-        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size(),iv);
-        ByteArray recover = krypt.decrypt(cipher.array,cipher.length,iv);   
+    if (aes192recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes192recover.array[i] != plainText[i]) {
+          aes192res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes192res = "failed";
     }
-}
-BENCHMARK(AES_EncryptCBC_100MB);
 
-static void AES_EncryptCBC(benchmark::State& state) {
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Enc | ECB | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Dec | ECB | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
 
-    std::vector<unsigned char> plain = randomArray(MB(10));
+    // ########################## AES 256 ########################## 
+    auto aes256EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256cipher = aes256.encrypt(plainText, bytes);
+    auto aes256EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
 
-    // if you want to AES192 or AES256, just increase the size of the key array
-    // the AES class will automatically detect it
-    unsigned char aes128key[] = {
-        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
-        0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f
-    };
+    auto aes256DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length);
+    auto aes256DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
 
-    unsigned char iv[] = {
-        0xa0, 0xb1, 0xc2, 0xd3, 0xe4, 0xf5, 0x16, 0x27,
-        0xf8, 0x99, 0x8a, 0x7b, 0x6c, 0x5d, 0x4e, 0x3f
-    };
+    std::string aes256res = "success";
 
-    Mode::CBC<BlockCipher::AES,Padding::ANSI_X9_23> krypt(aes128key,sizeof(aes128key));
-
-    for (auto _ : state)
-    {
-        // `Krypt::Bytes` is just a typedef for `unsigned char`
-        ByteArray cipher  = krypt.encrypt(plain.data(),plain.size(),iv);
-        ByteArray recover = krypt.decrypt(cipher.array,cipher.length,iv);   
+    if (aes256recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes256recover.array[i] != plainText[i]) {
+          aes256res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes256res = "failed";
     }
-}
-BENCHMARK(AES_EncryptCBC_100MB);
 
-BENCHMARK_MAIN();
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Enc | ECB | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Dec | ECB | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+  }
+
+  // CBC
+  {
+    Mode::CBC<BlockCipher::AES, Padding::ANSI_X9_23> aes128(aes128Key, sizeof(aes128Key));
+    Mode::CBC<BlockCipher::AES, Padding::ANSI_X9_23> aes192(aes192Key, sizeof(aes192Key));
+    Mode::CBC<BlockCipher::AES, Padding::ANSI_X9_23> aes256(aes256Key, sizeof(aes256Key));
+
+    unsigned char IV[16] = {
+      0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+      0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+    };
+
+    // ########################## AES 128 ########################## 
+    auto aes128EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128cipher = aes128.encrypt(plainText, bytes, IV);
+    auto aes128EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
+
+    auto aes128DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length, IV);
+    auto aes128DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
+
+    std::string aes128res = "success";
+
+    if (aes128recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes128recover.array[i] != plainText[i]) {
+          aes128res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes128res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Enc | CBC | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Dec | CBC | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
+
+    // ########################## AES 192 ########################## 
+    auto aes192EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192cipher = aes192.encrypt(plainText, bytes, IV);
+    auto aes192EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
+
+    auto aes192DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length, IV);
+    auto aes192DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
+
+    std::string aes192res = "success";
+
+    if (aes192recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes192recover.array[i] != plainText[i]) {
+          aes192res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes192res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Enc | CBC | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Dec | CBC | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
+
+    // ########################## AES 256 ########################## 
+    auto aes256EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256cipher = aes256.encrypt(plainText, bytes, IV);
+    auto aes256EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
+
+    auto aes256DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length, IV);
+    auto aes256DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
+
+    std::string aes256res = "success";
+
+    if (aes256recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes256recover.array[i] != plainText[i]) {
+          aes256res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes256res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Enc | CBC | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Dec | CBC | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+  }
+
+  // CFB
+  {
+    Mode::CFB<BlockCipher::AES, Padding::ANSI_X9_23> aes128(aes128Key, sizeof(aes128Key));
+    Mode::CFB<BlockCipher::AES, Padding::ANSI_X9_23> aes192(aes192Key, sizeof(aes192Key));
+    Mode::CFB<BlockCipher::AES, Padding::ANSI_X9_23> aes256(aes256Key, sizeof(aes256Key));
+
+    unsigned char IV[16] = {
+      0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+      0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff
+    };
+
+    // ########################## AES 128 ########################## 
+    auto aes128EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128cipher = aes128.encrypt(plainText, bytes, IV);
+    auto aes128EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
+
+    auto aes128DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length, IV);
+    auto aes128DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
+
+    std::string aes128res = "success";
+
+    if (aes128recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes128recover.array[i] != plainText[i]) {
+          aes128res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes128res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Enc | CFB | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES128 Dec | CFB | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
+
+    // ########################## AES 192 ########################## 
+    auto aes192EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192cipher = aes192.encrypt(plainText, bytes, IV);
+    auto aes192EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
+
+    auto aes192DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length, IV);
+    auto aes192DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
+
+    std::string aes192res = "success";
+
+    if (aes192recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes192recover.array[i] != plainText[i]) {
+          aes192res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes192res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Enc | CFB | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES192 Dec | CFB | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
+
+    // ########################## AES 256 ########################## 
+    auto aes256EncStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256cipher = aes256.encrypt(plainText, bytes, IV);
+    auto aes256EncEnd = std::chrono::high_resolution_clock::now();
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
+
+    auto aes256DecStart = std::chrono::high_resolution_clock::now();
+    ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length, IV);
+    auto aes256DecEnd = std::chrono::high_resolution_clock::now();
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
+
+    std::string aes256res = "success";
+
+    if (aes256recover.length == bytes) {
+      for (size_t i = 0; i < bytes; ++i) {
+        if (aes256recover.array[i] != plainText[i]) {
+          aes256res = "failed";
+          break;
+        }
+      }
+    } else {
+      aes256res = "failed";
+    }
+
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Enc | CFB | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    
+    std::cout << std::fixed << std::setprecision(2) <<
+    "| AES256 Dec | CFB | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+  }
+
+  return 0;
+}
