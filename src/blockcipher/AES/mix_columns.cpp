@@ -11,10 +11,7 @@ namespace Krypt
         {
             unsigned char temp_state[4][4];
             
-            for(size_t i=0; i<4; ++i)
-            {
-                memset(temp_state[i],0,4);
-            }
+            memset(temp_state, 0x00, 4 * 4);
 
             for(size_t i=0; i<4; ++i) {
                 for(size_t k=0; k<4; ++k) {
@@ -28,20 +25,14 @@ namespace Krypt
                 }
             }
 
-            for(size_t i=0; i<4; ++i)
-            {
-                memcpy(state[i],temp_state[i],4);
-            }
+            memcpy(state, temp_state, 4 * 4);
         }
 
         void AES::InvMixColumns(unsigned char state[4][4])
         {
             unsigned char temp_state[4][4];
             
-            for(size_t i=0; i<4; ++i)
-            {
-                memset(temp_state[i],0,4);
-            }
+            memset(temp_state, 0x00, 4 * 4);
 
             for(size_t i=0; i<4; ++i)
             {
@@ -54,10 +45,7 @@ namespace Krypt
                 }
             }
 
-            for(size_t i=0; i<4; ++i)
-            {
-                memcpy(state[i],temp_state[i],4);
-            }
+            memcpy(state, temp_state, 4 * 4);
         }
     }
 }

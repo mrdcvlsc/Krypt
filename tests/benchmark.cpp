@@ -8,8 +8,10 @@
 using namespace Krypt;
 
 int main() {
+  const double nanosec_in_sec = 1000000000.00;
+
   // create random plain text
-  size_t MB = 100;
+  size_t MB = 200;
   size_t bytes = MB * 1024 * 1024;
 
   unsigned char *plainText = new unsigned char[bytes];
@@ -55,13 +57,13 @@ int main() {
     auto aes128EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128cipher = aes128.encrypt(plainText, bytes);
     auto aes128EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128EncEnd - aes128EncStart);
     double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
 
     auto aes128DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length);
     auto aes128DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128DecEnd - aes128DecStart);
     double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
 
     std::string aes128res = "success";
@@ -78,22 +80,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Enc | ECB | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    "| AES128 Enc | ECB | " << MB << " | " << (double) aes128EncDur.count() / nanosec_in_sec << " | " << aes128EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Dec | ECB | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
+    "| AES128 Dec | ECB | " << MB << " | " << (double) aes128DecDur.count() / nanosec_in_sec << " | " << aes128DecSpeed * nanosec_in_sec << " mb/s | " <<  aes128res << " |\n";
 
     // ########################## AES 192 ########################## 
     auto aes192EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192cipher = aes192.encrypt(plainText, bytes);
     auto aes192EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192EncEnd - aes192EncStart);
     double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
 
     auto aes192DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length);
     auto aes192DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192DecEnd - aes192DecStart);
     double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
 
     std::string aes192res = "success";
@@ -110,22 +112,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Enc | ECB | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    "| AES192 Enc | ECB | " << MB << " | " << (double) aes192EncDur.count() / nanosec_in_sec << " | " << aes192EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Dec | ECB | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
+    "| AES192 Dec | ECB | " << MB << " | " << (double) aes192DecDur.count() / nanosec_in_sec << " | " << aes192DecSpeed * nanosec_in_sec << " mb/s | " <<  aes192res << " |\n";
 
     // ########################## AES 256 ########################## 
     auto aes256EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256cipher = aes256.encrypt(plainText, bytes);
     auto aes256EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256EncEnd - aes256EncStart);
     double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
 
     auto aes256DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length);
     auto aes256DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256DecEnd - aes256DecStart);
     double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
 
     std::string aes256res = "success";
@@ -142,10 +144,10 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Enc | ECB | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    "| AES256 Enc | ECB | " << MB << " | " << (double) aes256EncDur.count() / nanosec_in_sec << " | " << aes256EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Dec | ECB | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+    "| AES256 Dec | ECB | " << MB << " | " << (double) aes256DecDur.count() / nanosec_in_sec << " | " << aes256DecSpeed * nanosec_in_sec << " mb/s | " <<  aes256res << " |\n";
   }
 
   // CBC
@@ -163,13 +165,13 @@ int main() {
     auto aes128EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128cipher = aes128.encrypt(plainText, bytes, IV);
     auto aes128EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128EncEnd - aes128EncStart);
     double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
 
     auto aes128DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length, IV);
     auto aes128DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128DecEnd - aes128DecStart);
     double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
 
     std::string aes128res = "success";
@@ -186,22 +188,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Enc | CBC | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    "| AES128 Enc | CBC | " << MB << " | " << (double) aes128EncDur.count() / nanosec_in_sec << " | " << aes128EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Dec | CBC | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
+    "| AES128 Dec | CBC | " << MB << " | " << (double) aes128DecDur.count() / nanosec_in_sec << " | " << aes128DecSpeed * nanosec_in_sec << " mb/s | " <<  aes128res << " |\n";
 
     // ########################## AES 192 ########################## 
     auto aes192EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192cipher = aes192.encrypt(plainText, bytes, IV);
     auto aes192EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192EncEnd - aes192EncStart);
     double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
 
     auto aes192DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length, IV);
     auto aes192DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192DecEnd - aes192DecStart);
     double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
 
     std::string aes192res = "success";
@@ -218,22 +220,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Enc | CBC | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    "| AES192 Enc | CBC | " << MB << " | " << (double) aes192EncDur.count() / nanosec_in_sec << " | " << aes192EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Dec | CBC | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
+    "| AES192 Dec | CBC | " << MB << " | " << (double) aes192DecDur.count() / nanosec_in_sec << " | " << aes192DecSpeed * nanosec_in_sec << " mb/s | " <<  aes192res << " |\n";
 
     // ########################## AES 256 ########################## 
     auto aes256EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256cipher = aes256.encrypt(plainText, bytes, IV);
     auto aes256EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256EncEnd - aes256EncStart);
     double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
 
     auto aes256DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length, IV);
     auto aes256DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256DecEnd - aes256DecStart);
     double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
 
     std::string aes256res = "success";
@@ -250,10 +252,10 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Enc | CBC | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    "| AES256 Enc | CBC | " << MB << " | " << (double) aes256EncDur.count() / nanosec_in_sec << " | " << aes256EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Dec | CBC | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+    "| AES256 Dec | CBC | " << MB << " | " << (double) aes256DecDur.count() / nanosec_in_sec << " | " << aes256DecSpeed * nanosec_in_sec << " mb/s | " <<  aes256res << " |\n";
   }
 
   // CFB
@@ -271,13 +273,13 @@ int main() {
     auto aes128EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128cipher = aes128.encrypt(plainText, bytes, IV);
     auto aes128EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes128EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes128EncEnd - aes128EncStart);
+    auto aes128EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128EncEnd - aes128EncStart);
     double aes128EncSpeed = (double) MB / (double) aes128EncDur.count();
 
     auto aes128DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes128recover = aes128.decrypt(aes128cipher.array, aes128cipher.length, IV);
     auto aes128DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes128DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes128DecEnd - aes128DecStart);
+    auto aes128DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes128DecEnd - aes128DecStart);
     double aes128DecSpeed = (double) MB / (double) aes128DecDur.count();
 
     std::string aes128res = "success";
@@ -294,22 +296,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Enc | CFB | " << MB << " | " << aes128EncDur.count() << " | " << aes128EncSpeed << " mb/s | N/A |\n";
+    "| AES128 Enc | CFB | " << MB << " | " << (double) aes128EncDur.count() / nanosec_in_sec << " | " << aes128EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES128 Dec | CFB | " << MB << " | " << aes128DecDur.count() << " | " << aes128DecSpeed << " mb/s | " <<  aes128res << " |\n";
+    "| AES128 Dec | CFB | " << MB << " | " << (double) aes128DecDur.count() / nanosec_in_sec << " | " << aes128DecSpeed * nanosec_in_sec << " mb/s | " <<  aes128res << " |\n";
 
     // ########################## AES 192 ########################## 
     auto aes192EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192cipher = aes192.encrypt(plainText, bytes, IV);
     auto aes192EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes192EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes192EncEnd - aes192EncStart);
+    auto aes192EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192EncEnd - aes192EncStart);
     double aes192EncSpeed = (double) MB / (double) aes192EncDur.count();
 
     auto aes192DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes192recover = aes192.decrypt(aes192cipher.array, aes192cipher.length, IV);
     auto aes192DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes192DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes192DecEnd - aes192DecStart);
+    auto aes192DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes192DecEnd - aes192DecStart);
     double aes192DecSpeed = (double) MB / (double) aes192DecDur.count();
 
     std::string aes192res = "success";
@@ -326,22 +328,22 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Enc | CFB | " << MB << " | " << aes192EncDur.count() << " | " << aes192EncSpeed << " mb/s | N/A |\n";
+    "| AES192 Enc | CFB | " << MB << " | " << (double) aes192EncDur.count() / nanosec_in_sec << " | " << aes192EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES192 Dec | CFB | " << MB << " | " << aes192DecDur.count() << " | " << aes192DecSpeed << " mb/s | " <<  aes192res << " |\n";
+    "| AES192 Dec | CFB | " << MB << " | " << (double) aes192DecDur.count() / nanosec_in_sec << " | " << aes192DecSpeed * nanosec_in_sec << " mb/s | " <<  aes192res << " |\n";
 
     // ########################## AES 256 ########################## 
     auto aes256EncStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256cipher = aes256.encrypt(plainText, bytes, IV);
     auto aes256EncEnd = std::chrono::high_resolution_clock::now();
-    auto aes256EncDur = std::chrono::duration_cast<std::chrono::seconds>(aes256EncEnd - aes256EncStart);
+    auto aes256EncDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256EncEnd - aes256EncStart);
     double aes256EncSpeed = (double) MB / (double) aes256EncDur.count();
 
     auto aes256DecStart = std::chrono::high_resolution_clock::now();
     ByteArray aes256recover = aes256.decrypt(aes256cipher.array, aes256cipher.length, IV);
     auto aes256DecEnd = std::chrono::high_resolution_clock::now();
-    auto aes256DecDur = std::chrono::duration_cast<std::chrono::seconds>(aes256DecEnd - aes256DecStart);
+    auto aes256DecDur = std::chrono::duration_cast<std::chrono::nanoseconds>(aes256DecEnd - aes256DecStart);
     double aes256DecSpeed = (double) MB / (double) aes256DecDur.count();
 
     std::string aes256res = "success";
@@ -358,10 +360,10 @@ int main() {
     }
 
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Enc | CFB | " << MB << " | " << aes256EncDur.count() << " | " << aes256EncSpeed << " mb/s | N/A |\n";
+    "| AES256 Enc | CFB | " << MB << " | " << (double) aes256EncDur.count() / nanosec_in_sec << " | " << aes256EncSpeed * nanosec_in_sec << " mb/s | N/A |\n";
     
     std::cout << std::fixed << std::setprecision(2) <<
-    "| AES256 Dec | CFB | " << MB << " | " << aes256DecDur.count() << " | " << aes256DecSpeed << " mb/s | " <<  aes256res << " |\n";
+    "| AES256 Dec | CFB | " << MB << " | " << (double) aes256DecDur.count() / nanosec_in_sec << " | " << aes256DecSpeed * nanosec_in_sec << " mb/s | " <<  aes256res << " |\n";
   }
 
   return 0;

@@ -13,15 +13,27 @@ endif
 bench:
 	@echo "compiling benchmark : START"
 	@$(CXX) tests/benchmark.cpp -o bin/benchmark.out -O3
+	@$(CXX) tests/benchmark.cpp -o bin/benchmark-aesni.out -DUSE_AESNI -maes -O3
 	@echo "compiling benchmark : DONE"
+
 	@echo "# Benchmark" > benchmark-$(CXX).md
 	@echo "" >> benchmark-$(CXX).md
 	@echo "Compiler : $(CXX)" >> benchmark-$(CXX).md
+	@echo "running benchmark : START"
+
+	@echo "" >> benchmark-$(CXX).md
+	@echo "## Pure C++" >> benchmark-$(CXX).md
 	@echo "" >> benchmark-$(CXX).md
 	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> benchmark-$(CXX).md
 	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> benchmark-$(CXX).md
-	@echo "running benchmark : START"
 	@./bin/benchmark.out >> benchmark-$(CXX).md
+	
+	@echo "" >> benchmark-$(CXX).md
+	@echo "## AES-NI" >> benchmark-$(CXX).md
+	@echo "" >> benchmark-$(CXX).md
+	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> benchmark-$(CXX).md
+	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> benchmark-$(CXX).md
+	@./bin/benchmark-aesni.out >> benchmark-$(CXX).md
 	@echo "running benchmark : DONE"
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
