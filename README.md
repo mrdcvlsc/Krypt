@@ -89,4 +89,8 @@ int main()
 
 -----------
 
-[Doxygen Doc Test](https://mrdcvlsc.github.io/Krypt/)
+## **Others**
+
+- [Doxygen Doc Test](https://mrdcvlsc.github.io/Krypt/)
+- [Benchmark with g++](docs/benchmarks/benchmark-g%2B%2B.md)
+- [Benchmark with clang++](docs/benchmarks/benchmark-clang%2B%2B.md)

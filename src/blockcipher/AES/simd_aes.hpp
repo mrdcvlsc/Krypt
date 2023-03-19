@@ -109,8 +109,6 @@ void Aes128BlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
     _mm_storeu_si128((__m128i*)recover, state);
 }
 
-// you can even optimized these two functions further by unrolling the "next rounds" for loop
-
 // ===================================== AES192 =====================================
 
 void Aes192BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)

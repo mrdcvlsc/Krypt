@@ -30,8 +30,7 @@ namespace smlts {
 
     public:
 
-    test() : test_number(0), final_verdict(0) {
-    }
+    test() : test_number(0), final_verdict(0) {}
 
     template <typename T1, typename T2>
     void cmp_eq(T1 a, T2 b, size_t numBytes, std::string const &test_name = "");

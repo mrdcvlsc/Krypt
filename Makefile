@@ -1,7 +1,8 @@
 ########################## DOCKER ##########################
 
 CXX=g++
-FLAGS=-Wall -Wextra 
+CXX_STANDARD=-std=c++14
+FLAGS=-Wall -Wextra
 OS := $(shell uname)
 
 ifeq ($(OS), Linux)
@@ -16,47 +17,38 @@ bench:
 	@$(CXX) tests/benchmark.cpp -o bin/benchmark-aesni.out -DUSE_AESNI -maes -O3
 	@echo "compiling benchmark : DONE"
 
-	@echo "# Benchmark" > benchmark-$(CXX).md
-	@echo "" >> benchmark-$(CXX).md
-	@echo "Compiler : $(CXX)" >> benchmark-$(CXX).md
+	@echo "# Benchmark" > docs/benchmarks/benchmark-$(CXX).md
+	@echo "" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "Compiler : $(CXX)" >> docs/benchmarks/benchmark-$(CXX).md
 	@echo "running benchmark : START"
 
-	@echo "" >> benchmark-$(CXX).md
-	@echo "## Pure C++" >> benchmark-$(CXX).md
-	@echo "" >> benchmark-$(CXX).md
-	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> benchmark-$(CXX).md
-	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> benchmark-$(CXX).md
-	@./bin/benchmark.out >> benchmark-$(CXX).md
+	@echo "" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "## Pure C++" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> docs/benchmarks/benchmark-$(CXX).md
+	@./bin/benchmark.out >> docs/benchmarks/benchmark-$(CXX).md
 	
-	@echo "" >> benchmark-$(CXX).md
-	@echo "## AES-NI" >> benchmark-$(CXX).md
-	@echo "" >> benchmark-$(CXX).md
-	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> benchmark-$(CXX).md
-	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> benchmark-$(CXX).md
-	@./bin/benchmark-aesni.out >> benchmark-$(CXX).md
+	@echo "" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "## AES-NI" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "| Block Cipher | Mode | MB | Seconds | Speed | Result |" >> docs/benchmarks/benchmark-$(CXX).md
+	@echo "| ------------ | ---- | -- | ------- | ----- | ------ |" >> docs/benchmarks/benchmark-$(CXX).md
+	@./bin/benchmark-aesni.out >> docs/benchmarks/benchmark-$(CXX).md
 	@echo "running benchmark : DONE"
 
 compile_all: clean compile_test compile_debug compile_profile compile_release
 
 compile_test:
-	$(CXX) -std=c++11 -g ./tests/moves.cpp -D CLASSIC_MAKE -o bin/moves.out $(FLAGS)
-	$(CXX) -std=c++11 -g ./tests/tests.cpp -D CLASSIC_MAKE -o bin/test.out $(FLAGS)
-	$(CXX) -std=c++11 -g ./tests/moves.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/moves_aesni.out $(FLAGS)
-	$(CXX) -std=c++11 -g ./tests/tests.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/test_aesni.out $(FLAGS)
-
-compile_debug:
-	$(CXX) -g ./dev/main.cpp -o bin/debug.out
-
-compile_profile:
-	$(CXX) -pg ./dev/main.cpp -o bin/profile.out
-
-compile_release:
-	$(CXX) -O2 ./dev/main.cpp -o bin/release.out
+	$(CXX) $(CXX_STANDARD) -g tests/byte_array.cpp -D CLASSIC_MAKE -o bin/byte_array.out $(FLAGS)
+	$(CXX) $(CXX_STANDARD) -g tests/testvectors.cpp -D CLASSIC_MAKE -o bin/test.out $(FLAGS)
+	$(CXX) $(CXX_STANDARD) -g tests/byte_array.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/byte_array_aesni.out $(FLAGS)
+	$(CXX) $(CXX_STANDARD) -g tests/testvectors.cpp -D CLASSIC_MAKE -DUSE_AESNI -maes -o bin/test_aesni.out $(FLAGS)
 
 run_test:
-	./bin/moves.out
+	./bin/byte_array.out
 	./bin/test.out
-	./bin/moves_aesni.out
+	./bin/byte_array_aesni.out
 	./bin/test_aesni.out
 
 run_debug:
