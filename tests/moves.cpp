@@ -139,4 +139,6 @@ int main()
         if(memcmp(cipher.array,plain,sizeof(plain))) throw std::logic_error("Wrong decryption output");
     }
     std::cout << "CFB : ByteArray Copied to ByteArray   - Passed\n";
+
+    return 0;
 }
