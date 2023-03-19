@@ -12,9 +12,11 @@ This fork was optimized and used by my file [encryption/decryption program](http
 
 -----------
 
+## **Compile with C++14 or above**
+
 **Compilation Note:** This is a header only library, you only need to include the ```"Krypt.hpp"```, no need to compile the library first, and there's no need to add/link the ```.cpp``` files of the library to your compilation flag, see the example below.
 
-***To get the peak performance of this portable library compile it with the flags ```-O3 -march=native```***
+***To get the peak performance of this portable library compile it with the flags ```-O3```***
 
 ***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.***
 
@@ -48,9 +50,9 @@ int main()
 }
 ```
 
-**compile with [pure c/c++ code]** ```g++ -o sample.exe sample.cpp -O3 -march=native```
+**compile with [pure c/c++ code]** ```g++ -o sample.exe sample.cpp -O3```
 
-**comple with [AES-NI]** ```g++ -o sample.exe sample.cpp -D USE_AESNI -maes -O3 -march=native```
+**comple with [AES-NI]** ```g++ -o sample.exe sample.cpp -D USE_AESNI -maes -O3```
 
 -------------
 

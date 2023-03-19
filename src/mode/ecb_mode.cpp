@@ -1,6 +1,7 @@
 #ifndef ECP_MODE_CPP
 #define ECP_MODE_CPP
 
+#include "../bytearray.hpp"
 #include "../mode.hpp"
 
 namespace Krypt

@@ -16,11 +16,10 @@ namespace Krypt
 
     void SubDWordBytes(Bytes *a)
     {
-        int i;
-        for (i = 0; i < 4; i++)
-        {
-            a[i] = sbox[a[i]];
-        }
+        a[0] = sbox[a[0]];
+        a[1] = sbox[a[1]];
+        a[2] = sbox[a[2]];
+        a[3] = sbox[a[3]];
     }
 
     void RotDWord(Bytes *a)
@@ -34,11 +33,10 @@ namespace Krypt
 
     void XorDWords(Bytes *a, Bytes *b, Bytes *dest)
     {
-        int i;
-        for (i = 0; i < 4; i++)
-        {
-            dest[i] = a[i] ^ b[i];
-        }
+        dest[0] = a[0] ^ b[0];
+        dest[1] = a[1] ^ b[1];
+        dest[2] = a[2] ^ b[2];
+        dest[3] = a[3] ^ b[3];
     }
 
     void XorBlocks(unsigned char *a, unsigned char * b, unsigned char *dest, unsigned int len)

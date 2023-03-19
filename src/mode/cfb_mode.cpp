@@ -1,6 +1,7 @@
 #ifndef CFB_MODE_CPP
 #define CFB_MODE_CPP
 
+#include "../bytearray.hpp"
 #include "../mode.hpp"
 
 namespace Krypt

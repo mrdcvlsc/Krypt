@@ -24,19 +24,30 @@ namespace Krypt
             #else
 
             Bytes state[4][4];
-            uint8_t i, j, round;
 
-            for (i = 0; i < 4; i++)
-            {
-                for (j = 0; j < Nb; j++)
-                {
-                    state[i][j] = src[i + 4 * j];
-                }
-            }
+            state[0][0] = src[0];
+            state[0][1] = src[4];
+            state[0][2] = src[8];
+            state[0][3] = src[12];
+
+            state[1][0] = src[1];
+            state[1][1] = src[5];
+            state[1][2] = src[9];
+            state[1][3] = src[13];
+
+            state[2][0] = src[2];
+            state[2][1] = src[6];
+            state[2][2] = src[10];
+            state[2][3] = src[14];
+
+            state[3][0] = src[3];
+            state[3][1] = src[7];
+            state[3][2] = src[11];
+            state[3][3] = src[15];
 
             AddRoundKey(state, RoundedKeys);
 
-            for (round = 1; round <= Nr - 1; round++)
+            for (uint8_t round = 1; round <= Nr - 1; round++)
             {
                 SubBytes(state);
                 ShiftRows(state);
@@ -48,13 +59,25 @@ namespace Krypt
             ShiftRows(state);
             AddRoundKey(state, RoundedKeys + Nr * 4 * Nb);
 
-            for (i = 0; i < 4; i++)
-            {
-                for (j = 0; j < Nb; j++)
-                {
-                    dest[i + 4 * j] = state[i][j];
-                }
-            }
+            dest[0] = state[0][0];
+            dest[4] = state[0][1];
+            dest[8] = state[0][2];
+            dest[12] = state[0][3];
+
+            dest[1] = state[1][0];
+            dest[5] = state[1][1];
+            dest[9] = state[1][2];
+            dest[13] = state[1][3];
+
+            dest[2] = state[2][0];
+            dest[6] = state[2][1];
+            dest[10] = state[2][2];
+            dest[14] = state[2][3];
+
+            dest[3] = state[3][0];
+            dest[7] = state[3][1];
+            dest[11] = state[3][2];
+            dest[15] = state[3][3];
 
             #endif
         }
@@ -72,18 +95,27 @@ namespace Krypt
             #else
 
             Bytes state[4][4];
-            uint8_t i, j, round;
 
-            for (i = 0; i < 4; i++)
-            {
-                for (j = 0; j < Nb; j++) {
-                    state[i][j] = src[i + 4 * j];
-                }
-            }
+            state[0][0] = src[0];
+            state[0][1] = src[4];
+            state[0][2] = src[8];
+            state[0][3] = src[12];
+            state[1][0] = src[1];
+            state[1][1] = src[5];
+            state[1][2] = src[9];
+            state[1][3] = src[13];
+            state[2][0] = src[2];
+            state[2][1] = src[6];
+            state[2][2] = src[10];
+            state[2][3] = src[14];
+            state[3][0] = src[3];
+            state[3][1] = src[7];
+            state[3][2] = src[11];
+            state[3][3] = src[15];
 
             AddRoundKey(state, RoundedKeys + Nr * 4 * Nb);
 
-            for (round = Nr - 1; round >= 1; round--)
+            for (uint8_t round = Nr - 1; round >= 1; round--)
             {
                 InvSubBytes(state);
                 InvShiftRows(state);
@@ -95,12 +127,22 @@ namespace Krypt
             InvShiftRows(state);
             AddRoundKey(state, RoundedKeys);
 
-            for (i = 0; i < 4; i++)
-            {
-                for (j = 0; j < Nb; j++) {
-                    dest[i + 4 * j] = state[i][j];
-                }
-            }
+            dest[0] = state[0][0];
+            dest[4] = state[0][1];
+            dest[8] = state[0][2];
+            dest[12] = state[0][3];
+            dest[1] = state[1][0];
+            dest[5] = state[1][1];
+            dest[9] = state[1][2];
+            dest[13] = state[1][3];
+            dest[2] = state[2][0];
+            dest[6] = state[2][1];
+            dest[10] = state[2][2];
+            dest[14] = state[2][3];
+            dest[3] = state[3][0];
+            dest[7] = state[3][1];
+            dest[11] = state[3][2];
+            dest[15] = state[3][3];
 
             #endif
         }
