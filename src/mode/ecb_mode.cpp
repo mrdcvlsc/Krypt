@@ -22,9 +22,8 @@ namespace Krypt
             ByteArray padded = this->PaddingScheme->AddPadding(plain,plainLen,this->Encryption->BLOCK_SIZE);
 
             Bytes* cipher = new Bytes[padded.length];
-            for(size_t i=0; i<padded.length; i+=this->Encryption->BLOCK_SIZE)
-            {
-                this->Encryption->EncryptBlock(padded.array+i,cipher+i);
+            for(size_t i=0; i<padded.length; i+=this->Encryption->BLOCK_SIZE) {
+                blockEncrypt(padded.array + i, cipher + i);
             }
 
             return ByteArray(cipher,padded.length);
@@ -37,12 +36,21 @@ namespace Krypt
             recovered.array = new Bytes[cipherLen];
             recovered.length = cipherLen;
 
-            for(size_t i=0; i<cipherLen; i+=this->Encryption->BLOCK_SIZE)
-            {
-                this->Encryption->DecryptBlock(cipher+i,recovered.array+i);
+            for(size_t i=0; i<cipherLen; i+=this->Encryption->BLOCK_SIZE) {
+                blockDecrypt(cipher + i, recovered.array + i);
             }
 
             return this->PaddingScheme->RemovePadding(recovered.array,recovered.length,this->Encryption->BLOCK_SIZE);
+        }
+
+        template<typename CIPHER_TYPE, typename PADDING_TYPE>
+        void ECB<CIPHER_TYPE, PADDING_TYPE>::blockEncrypt(Bytes* plain, Bytes* cipher, Bytes*) {
+            this->Encryption->EncryptBlock(plain, cipher);
+        }
+
+        template<typename CIPHER_TYPE, typename PADDING_TYPE>
+        void ECB<CIPHER_TYPE, PADDING_TYPE>::blockDecrypt(Bytes* cipher, Bytes* recover, Bytes*) {
+            this->Encryption->DecryptBlock(cipher, recover);
         }
     }
 }

@@ -25,6 +25,9 @@ namespace Krypt
                 virtual ByteArray encrypt(Bytes*, size_t, Bytes*) = 0;
                 virtual ByteArray decrypt(Bytes*, size_t, Bytes*) = 0;
 
+                virtual void blockEncrypt(Bytes*, Bytes*, Bytes*) = 0;
+                virtual void blockDecrypt(Bytes*, Bytes*, Bytes*) = 0;
+
                 ~MODE()
                 {
                     delete Encryption;
@@ -48,6 +51,9 @@ namespace Krypt
                 /// @param cipherLen this is the size of the *cipher array.
                 /// @param iv for ECB passing an iv will not do anything so there is no need to provide this function an iv array.
                 ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv=NULL) override;
+
+                void blockEncrypt(Bytes* plain, Bytes* cipher, Bytes* iv = NULL) override;
+                void blockDecrypt(Bytes* plain, Bytes* cipher, Bytes* iv = NULL) override;
         };
 
         /// Cipher Block Chaining.
@@ -66,6 +72,9 @@ namespace Krypt
                 /// @param cipherLen this is the size of the *cipher array.
                 /// @param iv the initial array use for the XOR'ing operations during the CBC decryption.
                 ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv) override;
+
+                void blockEncrypt(Bytes* plain, Bytes* cipher, Bytes* iv) override;
+                void blockDecrypt(Bytes* plain, Bytes* cipher, Bytes* iv) override;
         };
 
         /// Cipher Feedback.
@@ -84,6 +93,9 @@ namespace Krypt
                 /// @param cipherLen this is the size of the *cipher array.
                 /// @param iv the initial array use for the XOR'ing operations during the CFB decryption.
                 ByteArray decrypt(Bytes* cipher, size_t cipherLen, Bytes* iv) override;
+
+                void blockEncrypt(Bytes* plain, Bytes* cipher, Bytes* iv) override;
+                void blockDecrypt(Bytes* plain, Bytes* cipher, Bytes* iv) override;
         };
     }
 }
