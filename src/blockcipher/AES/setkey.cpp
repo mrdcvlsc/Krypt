@@ -40,6 +40,10 @@ namespace Krypt
         {
             if(RoundedKeys!=NULL) {
                 delete [] RoundedKeys;
+
+                #ifdef USE_AESNI
+                delete [] DecryptionRoundedKeys;
+                #endif
             }
         }
     }

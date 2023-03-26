@@ -61,14 +61,18 @@ namespace Krypt
 #else
             size_t RoundKeySize = Nr + 1;
             RoundedKeys = new __m128i[RoundKeySize];
+            DecryptionRoundedKeys = new __m128i[RoundKeySize];
 
             RoundedKeys[0] = _mm_loadu_si128((__m128i*) &w[0]);
+            DecryptionRoundedKeys[0] = RoundedKeys[0];
 
             for (size_t i = 1; i < RoundKeySize; ++i) {
                 RoundedKeys[i] = _mm_loadu_si128((__m128i*) &w[i*4*Nb]);
+                DecryptionRoundedKeys[i] = _mm_aesimc_si128(RoundedKeys[i]);
             }
 
             RoundedKeys[Nr] = _mm_loadu_si128((__m128i*) &w[Nr*4*Nb]);
+            DecryptionRoundedKeys[Nr] = RoundedKeys[Nr];
 
             delete [] w;
 #endif

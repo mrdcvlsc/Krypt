@@ -56,6 +56,7 @@ namespace Krypt
                 size_t Nr;
 #ifdef USE_AESNI
                 __m128i *RoundedKeys;
+                __m128i *DecryptionRoundedKeys;
 #else
                 Bytes *RoundedKeys;
 #endif

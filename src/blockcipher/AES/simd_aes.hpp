@@ -83,27 +83,27 @@ void Aes128BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
  * The aes instruction uses “Inverse Cipher” for decryption, meaning it does not use the original round keys for decryption.
  * Instead it uses the “Equivalent Inverse Cipher” for decryption where InverseMixColumns is applied on the original round keys.
  **/
-void Aes128BlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
+void Aes128BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
 {
     // load the current block & current round key into the registers
     __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
 
     // first round
-    state = _mm_xor_si128(state, roundKeys[10]);
+    state = _mm_xor_si128(state, decryptionRoundKeys[10]);
 
     // next rounds
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[9]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[8]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[7]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[6]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[5]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[4]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[3]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[2]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[1]));
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[9]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[8]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[7]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[6]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[5]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[4]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[3]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[2]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[1]);
 
     // last round
-    state = _mm_aesdeclast_si128(state, roundKeys[0]);
+    state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
     _mm_storeu_si128((__m128i*)recover, state);
@@ -139,29 +139,29 @@ void Aes192BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
     _mm_storeu_si128((__m128i*)(cipher),state);
 }
 
-void Aes192BlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
+void Aes192BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
 {
     // load the current block & current round key into the registers
     __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
     
     // first round
-    state = _mm_xor_si128(state, roundKeys[12]);
+    state = _mm_xor_si128(state, decryptionRoundKeys[12]);
 
     // next rounds
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[11]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[10]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[9]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[8]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[7]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[6]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[5]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[4]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[3]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[2]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[1]));
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[11]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[10]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[9]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[8]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[7]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[6]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[5]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[4]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[3]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[2]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[1]);
 
     // last round
-    state = _mm_aesdeclast_si128(state, roundKeys[0]);
+    state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
     _mm_storeu_si128((__m128i*)recover, state);
@@ -199,31 +199,31 @@ void Aes256BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
     _mm_storeu_si128((__m128i*)(cipher),state);
 }
 
-void Aes256BlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
+void Aes256BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
 {
     // load the current block & current round key into the registers
     __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
     
     // first round
-    state = _mm_xor_si128(state, roundKeys[14]);
+    state = _mm_xor_si128(state, decryptionRoundKeys[14]);
 
     // next rounds
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[13]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[12]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[11]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[10]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[9]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[8]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[7]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[6]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[5]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[4]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[3]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[2]));
-    state = _mm_aesdec_si128(state,_mm_aesimc_si128(roundKeys[1]));
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[13]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[12]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[11]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[10]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[9]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[8]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[7]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[6]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[5]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[4]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[3]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[2]);
+    state = _mm_aesdec_si128(state, decryptionRoundKeys[1]);
 
     // last round
-    state = _mm_aesdeclast_si128(state, roundKeys[0]);
+    state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
     _mm_storeu_si128((__m128i*)recover, state);
