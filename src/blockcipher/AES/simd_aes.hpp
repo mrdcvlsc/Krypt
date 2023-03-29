@@ -14,9 +14,9 @@ void AesBlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
    ======================================================
 */
 
-#include <stdio.h>
-#include <immintrin.h>
 #include <bitset>
+#include <immintrin.h>
+#include <stdio.h>
 
 // ------------------------- REFERENCE START -------------------------
 
@@ -24,25 +24,21 @@ void AesBlockDecrypt(Byte* cipher, Byte* recover, __m128i* roundKeys)
 // Before an application attempts to use the AES instructions, it should verify that the
 // processor supports these instructions. This should be done by checking that
 // CPUID.01H:ECX.AES[bit 25] = 1. The following (assembly) code demonstrates this
-// check. 
+// check.
 
 // GCC
 
-#define cpuid(func,ax,bx,cx,dx) \
-    __asm__ __volatile__ ("cpuid":\
-    "=a" (ax), "=b" (bx), "=c" (cx), "=d" (dx) : "a" (func));
+#define cpuid(func, ax, bx, cx, dx) __asm__ __volatile__("cpuid" : "=a"(ax), "=b"(bx), "=c"(cx), "=d"(dx) : "a"(func));
 
-int Check_CPU_support_AES()
-{
-    unsigned int a,b,c,d;
-    cpuid(1, a,b,c,d);
+int Check_CPU_support_AES() {
+    unsigned int a, b, c, d;
+    cpuid(1, a, b, c, d);
     return (c & 0x2000000);
 }
 
 // -------------------------  REFERENCE END  -------------------------
 
-bool AESNI_IS_AVAILABLE()
-{
+bool AESNI_IS_AVAILABLE() {
     std::bitset<32> ecx(Check_CPU_support_AES());
     return ecx[25];
 }
@@ -53,10 +49,9 @@ typedef unsigned char Byte;
 
 //=============================== AES128==================================
 
-void Aes128BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
-{
+void Aes128BlockEncrypt(Byte *plain, Byte *cipher, __m128i *roundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &plain[0]);
+    __m128i state = _mm_loadu_si128((__m128i *) &plain[0]);
 
     // first round
     state = _mm_xor_si128(state, roundKeys[0]);
@@ -73,20 +68,20 @@ void Aes128BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
     state = _mm_aesenc_si128(state, roundKeys[9]);
 
     // last round
-    state = _mm_aesenclast_si128(state,  roundKeys[10]);
+    state = _mm_aesenclast_si128(state, roundKeys[10]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)(cipher),state);
+    _mm_storeu_si128((__m128i *) (cipher), state);
 }
 
 /** Note:
- * The aes instruction uses “Inverse Cipher” for decryption, meaning it does not use the original round keys for decryption.
- * Instead it uses the “Equivalent Inverse Cipher” for decryption where InverseMixColumns is applied on the original round keys.
+ * The aes instruction uses “Inverse Cipher” for decryption, meaning it does not use the original round keys for
+ *decryption. Instead it uses the “Equivalent Inverse Cipher” for decryption where InverseMixColumns is applied on the
+ *original round keys.
  **/
-void Aes128BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
-{
+void Aes128BlockDecrypt(Byte *cipher, Byte *recover, __m128i *decryptionRoundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
+    __m128i state = _mm_loadu_si128((__m128i *) &cipher[0]);
 
     // first round
     state = _mm_xor_si128(state, decryptionRoundKeys[10]);
@@ -106,16 +101,15 @@ void Aes128BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKey
     state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)recover, state);
+    _mm_storeu_si128((__m128i *) recover, state);
 }
 
 // ===================================== AES192 =====================================
 
-void Aes192BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
-{
+void Aes192BlockEncrypt(Byte *plain, Byte *cipher, __m128i *roundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &plain[0]);
-    
+    __m128i state = _mm_loadu_si128((__m128i *) &plain[0]);
+
     // first round
     state = _mm_xor_si128(state, roundKeys[0]);
 
@@ -133,17 +127,16 @@ void Aes192BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
     state = _mm_aesenc_si128(state, roundKeys[11]);
 
     // last round
-    state = _mm_aesenclast_si128(state,  roundKeys[12]);
+    state = _mm_aesenclast_si128(state, roundKeys[12]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)(cipher),state);
+    _mm_storeu_si128((__m128i *) (cipher), state);
 }
 
-void Aes192BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
-{
+void Aes192BlockDecrypt(Byte *cipher, Byte *recover, __m128i *decryptionRoundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
-    
+    __m128i state = _mm_loadu_si128((__m128i *) &cipher[0]);
+
     // first round
     state = _mm_xor_si128(state, decryptionRoundKeys[12]);
 
@@ -164,16 +157,15 @@ void Aes192BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKey
     state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)recover, state);
+    _mm_storeu_si128((__m128i *) recover, state);
 }
 
 // ==================================== AES256 ================================
 
-void Aes256BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
-{
+void Aes256BlockEncrypt(Byte *plain, Byte *cipher, __m128i *roundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &plain[0]);
-    
+    __m128i state = _mm_loadu_si128((__m128i *) &plain[0]);
+
     // first round
     state = _mm_xor_si128(state, roundKeys[0]);
 
@@ -193,17 +185,16 @@ void Aes256BlockEncrypt(Byte* plain, Byte* cipher, __m128i* roundKeys)
     state = _mm_aesenc_si128(state, roundKeys[13]);
 
     // last round
-    state = _mm_aesenclast_si128(state,  roundKeys[14]);
+    state = _mm_aesenclast_si128(state, roundKeys[14]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)(cipher),state);
+    _mm_storeu_si128((__m128i *) (cipher), state);
 }
 
-void Aes256BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKeys)
-{
+void Aes256BlockDecrypt(Byte *cipher, Byte *recover, __m128i *decryptionRoundKeys) {
     // load the current block & current round key into the registers
-    __m128i state = _mm_loadu_si128((__m128i*) &cipher[0]);
-    
+    __m128i state = _mm_loadu_si128((__m128i *) &cipher[0]);
+
     // first round
     state = _mm_xor_si128(state, decryptionRoundKeys[14]);
 
@@ -226,7 +217,7 @@ void Aes256BlockDecrypt(Byte* cipher, Byte* recover, __m128i* decryptionRoundKey
     state = _mm_aesdeclast_si128(state, decryptionRoundKeys[0]);
 
     // store from register to array
-    _mm_storeu_si128((__m128i*)recover, state);
+    _mm_storeu_si128((__m128i *) recover, state);
 }
 
 #endif

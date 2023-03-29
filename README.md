@@ -1,26 +1,53 @@
 # Krypt
 
+![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/build-test.yml/badge.svg)
+
 Forked From : https://github.com/SergeyBel/AES
 
 ### About this fork
 
 This fork was optimized and used by my file [encryption/decryption program](https://github.com/mrdcvlsc/bethela).
 
-**This header only library provides AES encryption and decryption algorithms, it has a portable C++ implementation and you can also activate and use the code that utilizes the AES-NI instructions.**
-
-![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/build-test.yml/badge.svg)
+**This header only library provides AES encryption and decryption algorithms.**
 
 -----------
 
-## **Compile with C++14 or above**
+**Compile with C++14 or above for maximum compatibility**
 
-**Compilation Note:** This is a header only library, you only need to include the ```"Krypt.hpp"```, no need to compile the library first, and there's no need to add/link the ```.cpp``` files of the library to your compilation flag, see the example below.
+```
+-std=c++14
+```
 
-***To get the peak performance of this portable library compile it with the flags ```-O3```***
+**Compilation Note:** This is a **header only** library, you 
+only need to include the ```"Krypt.hpp"```, no need to 
+compile the library first, and there's no need to add/link 
+the ```.cpp``` files of the library to your compilation 
+flag, see the example below.
 
-***If your system supports AES-NI instructions, just add the option ```-D USE_AESNI -maes``` in compilation to boost the performance.***
+**Compilation Flags:**
+- **Portable** - by just including the main headerfile 
+(`Krypt.hpp`), it will use the portable C++ code when 
+compiled, (_take note that the portable code is slower than 
+the two alternatives below_).
+    ```
+    -O3
+    ```
 
-**sample program:**
+- **AES-NI** - Add the flag below when compiling for 
+_**x86-64**_ to gain extream speed-up performance.
+(_commonly for mid ranged PC/Laptops_).
+    ```
+    -DUSE_AESNI -maes -O3
+    ```
+
+- **ARM neon** - Add the flag below when compiling for 
+_**aarch64 armv8**_ to gain extream speed-up performance. 
+(_commonly for modern android devices_).
+    ```
+    -DUSE_ARM_AES -march=armv8-a+crypto -O3
+    ```
+
+**Sample program:**
 ```c++
 /*    sample.cpp    */
 #include <iostream>
@@ -53,6 +80,8 @@ int main()
 **compile with [pure c/c++ code]** ```g++ -o sample.exe sample.cpp -O3```
 
 **comple with [AES-NI]** ```g++ -o sample.exe sample.cpp -D USE_AESNI -maes -O3```
+
+**comple with [arm-neon]** ```g++ -o sample.exe sample.cpp -D USE_ARM_AES -march=armv8-a+crypto -O3```
 
 -------------
 

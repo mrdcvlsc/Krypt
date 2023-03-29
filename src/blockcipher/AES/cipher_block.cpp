@@ -4,24 +4,43 @@
 #include "../../blockcipher.hpp"
 
 #ifdef USE_AESNI
-#include "simd_aes.hpp"
+    #include "simd_aes.hpp"
+#elif defined(USE_ARM_AES)
+    #include "aarch64_aes.hpp"
 #endif
 
-namespace Krypt
-{
-    namespace BlockCipher
-    {
-        void AES::EncryptBlock(Bytes *src, Bytes *dest)
-        {
-            #ifdef USE_AESNI
-            switch (Nr)
-            {
-            case 10: Aes128BlockEncrypt(src, dest, RoundedKeys); break;
-            case 12: Aes192BlockEncrypt(src, dest, RoundedKeys); break;
-            case 14: Aes256BlockEncrypt(src, dest, RoundedKeys); break;
-            default: throw std::invalid_argument("Incorrect key length");
+namespace Krypt {
+    namespace BlockCipher {
+        void AES::EncryptBlock(Bytes *src, Bytes *dest) {
+#ifdef USE_AESNI
+            switch (Nr) {
+                case 10:
+                    Aes128BlockEncrypt(src, dest, RoundedKeys);
+                    break;
+                case 12:
+                    Aes192BlockEncrypt(src, dest, RoundedKeys);
+                    break;
+                case 14:
+                    Aes256BlockEncrypt(src, dest, RoundedKeys);
+                    break;
+                default:
+                    throw std::invalid_argument("Incorrect key length");
             }
-            #else
+#elif defined(USE_ARM_AES)
+            switch (Nr) {
+                case 10:
+                    neon_aes128_encrypt(src, dest, RoundedKeys);
+                    break;
+                case 12:
+                    neon_aes192_encrypt(src, dest, RoundedKeys);
+                    break;
+                case 14:
+                    neon_aes256_encrypt(src, dest, RoundedKeys);
+                    break;
+                default:
+                    throw std::invalid_argument("Incorrect key length");
+            }
+#else
 
             Bytes state[4][4];
 
@@ -47,8 +66,7 @@ namespace Krypt
 
             AddRoundKey(state, RoundedKeys);
 
-            for (uint8_t round = 1; round <= Nr - 1; round++)
-            {
+            for (uint8_t round = 1; round <= Nr - 1; round++) {
                 SubBytes(state);
                 ShiftRows(state);
                 MixColumns(state);
@@ -79,20 +97,39 @@ namespace Krypt
             dest[11] = state[3][2];
             dest[15] = state[3][3];
 
-            #endif
+#endif
         }
 
-        void AES::DecryptBlock(Bytes *src, Bytes *dest)
-        {
-            #ifdef USE_AESNI
-            switch (Nr)
-            {
-            case 10: Aes128BlockDecrypt(src, dest, DecryptionRoundedKeys); break;
-            case 12: Aes192BlockDecrypt(src, dest, DecryptionRoundedKeys); break;
-            case 14: Aes256BlockDecrypt(src, dest, DecryptionRoundedKeys); break;
-            default: throw std::invalid_argument("Incorrect key length");
+        void AES::DecryptBlock(Bytes *src, Bytes *dest) {
+#ifdef USE_AESNI
+            switch (Nr) {
+                case 10:
+                    Aes128BlockDecrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                case 12:
+                    Aes192BlockDecrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                case 14:
+                    Aes256BlockDecrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                default:
+                    throw std::invalid_argument("Incorrect key length");
             }
-            #else
+#elif defined(USE_ARM_AES)
+            switch (Nr) {
+                case 10:
+                    neon_aes128_decrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                case 12:
+                    neon_aes192_decrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                case 14:
+                    neon_aes256_decrypt(src, dest, DecryptionRoundedKeys);
+                    break;
+                default:
+                    throw std::invalid_argument("Incorrect key length");
+            }
+#else
 
             Bytes state[4][4];
 
@@ -115,8 +152,7 @@ namespace Krypt
 
             AddRoundKey(state, RoundedKeys + Nr * 4 * Nb);
 
-            for (uint8_t round = Nr - 1; round >= 1; round--)
-            {
+            for (uint8_t round = Nr - 1; round >= 1; round--) {
                 InvSubBytes(state);
                 InvShiftRows(state);
                 AddRoundKey(state, RoundedKeys + round * 4 * Nb);
@@ -144,9 +180,9 @@ namespace Krypt
             dest[11] = state[3][2];
             dest[15] = state[3][3];
 
-            #endif
+#endif
         }
-    }
-}
+    } // namespace BlockCipher
+} // namespace Krypt
 
 #endif

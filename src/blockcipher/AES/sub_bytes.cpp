@@ -3,12 +3,9 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt
-{
-    namespace BlockCipher
-    {
-        void AES::SubBytes(unsigned char state[4][4])
-        {
+namespace Krypt {
+    namespace BlockCipher {
+        void AES::SubBytes(unsigned char state[4][4]) {
             state[0][0] = sbox[state[0][0]];
             state[0][1] = sbox[state[0][1]];
             state[0][2] = sbox[state[0][2]];
@@ -30,8 +27,7 @@ namespace Krypt
             state[3][3] = sbox[state[3][3]];
         }
 
-        void AES::InvSubBytes(unsigned char state[4][4])
-        {
+        void AES::InvSubBytes(unsigned char state[4][4]) {
             state[0][0] = inv_sbox[state[0][0]];
             state[0][1] = inv_sbox[state[0][1]];
             state[0][2] = inv_sbox[state[0][2]];
@@ -52,7 +48,7 @@ namespace Krypt
             state[3][2] = inv_sbox[state[3][2]];
             state[3][3] = inv_sbox[state[3][3]];
         }
-    }
-}
+    } // namespace BlockCipher
+} // namespace Krypt
 
 #endif

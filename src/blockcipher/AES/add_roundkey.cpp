@@ -3,12 +3,9 @@
 
 #include "../../blockcipher.hpp"
 
-namespace Krypt
-{
-    namespace BlockCipher
-    {
-        void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key)
-        {
+namespace Krypt {
+    namespace BlockCipher {
+        void AES::AddRoundKey(unsigned char state[4][4], unsigned char *key) {
             state[0][0] = state[0][0] ^ key[0];
             state[0][1] = state[0][1] ^ key[4];
             state[0][2] = state[0][2] ^ key[8];
@@ -29,7 +26,7 @@ namespace Krypt
             state[3][2] = state[3][2] ^ key[11];
             state[3][3] = state[3][3] ^ key[15];
         }
-    }
-}
+    } // namespace BlockCipher
+} // namespace Krypt
 
 #endif
