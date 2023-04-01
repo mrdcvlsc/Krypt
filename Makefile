@@ -86,14 +86,6 @@ bench:
 	@./bin/benchmark-aesni.out >> docs/benchmarks/benchmark-$(CXX).md
 	@echo "running benchmark : DONE"
 
-compile_all: clean compile_test compile_debug compile_profile compile_release
-
-compile_test:
-	$(CXX) $(CXX_STANDARD) -g tests/byte_array.cpp -o bin/byte_array.out $(FLAGS)
-	$(CXX) $(CXX_STANDARD) -g tests/testvectors.cpp -o bin/test.out $(FLAGS)
-	$(CXX) $(CXX_STANDARD) -g tests/byte_array.cpp -DUSE_AESNI -maes -o bin/byte_array_aesni.out $(FLAGS)
-	$(CXX) $(CXX_STANDARD) -g tests/testvectors.cpp -DUSE_AESNI -maes -o bin/test_aesni.out $(FLAGS)
-
 compile:
 	$(CXX) $(LINKER) $(CXX_STANDARD) tests/byte_array.cpp -o bin/byte_array.out $(DFLAGS) $(ADDRESS_SANITIZER) $(CXX_FLAGS)
 	$(CXX) $(LINKER) $(CXX_STANDARD) tests/testvectors.cpp -o bin/test.out $(DFLAGS) $(ADDRESS_SANITIZER) $(CXX_FLAGS)
