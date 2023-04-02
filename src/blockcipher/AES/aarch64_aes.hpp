@@ -3,9 +3,23 @@
 
 #include <iostream>
 
-#if defined(__aarch64__)
+// MACROS : https://github.com/noloader/AES-Intrinsics/blob/master/aes-arm.c
+#if defined(__arm__) || defined(__aarch32__) || defined(__arm64__) || defined(__aarch64__) || defined(_M_ARM)
 
-    #include <arm_neon.h>
+    #if defined(__GNUC__)
+        #include <stdint.h>
+    #endif
+
+    #if defined(__ARM_NEON) || defined(_MSC_VER)
+        #include <arm_neon.h>
+    #endif
+
+    /* GCC and LLVM Clang, but not Apple Clang */
+    #if defined(__GNUC__) && !defined(__apple_build_version__)
+        #if defined(__ARM_ACLE) || defined(__ARM_FEATURE_CRYPTO)
+            #include <arm_acle.h>
+        #endif
+    #endif
 
 // AES block encryption using 128-bit key
 void neon_aes128_encrypt(const uint8_t *input, uint8_t *output, const uint8x16_t *round_key) {
