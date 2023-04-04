@@ -13,33 +13,9 @@ namespace Krypt {
     namespace BlockCipher {
         void AES::EncryptBlock(Bytes *src, Bytes *dest) {
 #ifdef USE_AESNI
-            switch (Nr) {
-                case 10:
-                    Aes128BlockEncrypt(src, dest, RoundedKeys);
-                    break;
-                case 12:
-                    Aes192BlockEncrypt(src, dest, RoundedKeys);
-                    break;
-                case 14:
-                    Aes256BlockEncrypt(src, dest, RoundedKeys);
-                    break;
-                default:
-                    throw std::invalid_argument("Incorrect key length");
-            }
+            aesni_block_encrypt(src, dest, RoundedKeys, Nr);
 #elif defined(USE_ARM_AES)
-            switch (Nr) {
-                case 10:
-                    neon_aes128_encrypt(src, dest, RoundedKeys);
-                    break;
-                case 12:
-                    neon_aes192_encrypt(src, dest, RoundedKeys);
-                    break;
-                case 14:
-                    neon_aes256_encrypt(src, dest, RoundedKeys);
-                    break;
-                default:
-                    throw std::invalid_argument("Incorrect key length");
-            }
+            neon_aes_block_encrypt(src, dest, RoundedKeys, Nr);
 #else
 
             Bytes state[4][4];
@@ -102,33 +78,9 @@ namespace Krypt {
 
         void AES::DecryptBlock(Bytes *src, Bytes *dest) {
 #ifdef USE_AESNI
-            switch (Nr) {
-                case 10:
-                    Aes128BlockDecrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                case 12:
-                    Aes192BlockDecrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                case 14:
-                    Aes256BlockDecrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                default:
-                    throw std::invalid_argument("Incorrect key length");
-            }
+            aesni_block_decrypt(src, dest, DecryptionRoundedKeys, Nr);
 #elif defined(USE_ARM_AES)
-            switch (Nr) {
-                case 10:
-                    neon_aes128_decrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                case 12:
-                    neon_aes192_decrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                case 14:
-                    neon_aes256_decrypt(src, dest, DecryptionRoundedKeys);
-                    break;
-                default:
-                    throw std::invalid_argument("Incorrect key length");
-            }
+            neon_aes_block_decrypt(src, dest, DecryptionRoundedKeys, Nr);
 #else
 
             Bytes state[4][4];
