@@ -3,6 +3,14 @@
 
 #include "functions.hpp"
 
+// #define USE_AESNI
+
+#if defined(USE_AESNI)
+#include <immintrin.h>
+#else
+
+#endif
+
 // here the DWORDS is formed from 4 continous elements from a starting index of an unsinged char* array or Bytes*.
 // a DWORD or double-word occupies 32-bits in a memory.
 // the term DWORD is usually used to represent bits inside the eax,edx,...r15d parts of an x86_64 cpu register which can
@@ -40,6 +48,25 @@ namespace Krypt {
         for (unsigned int i = 0; i < len; i++) {
             dest[i] = a[i] ^ b[i];
         }
+    }
+
+    void XorAesBlock(unsigned char *a, unsigned char *b, unsigned char *result) {
+        #if defined(USE_AESNI)
+        __m128i vxor = _mm_xor_si128(
+            _mm_load_si128((__m128i *) a),
+            _mm_load_si128((__m128i *) b)
+        );
+
+        _mm_storeu_si128((__m128i *) (result), vxor);
+        #else
+        uint64_t
+            *A = reinterpret_cast<uint64_t *>(a),
+            *B = reinterpret_cast<uint64_t *>(b),
+            *C = reinterpret_cast<uint64_t *>(result);
+
+        C[0] = A[0] ^ B[0];
+        C[1] = A[1] ^ B[1];
+        #endif
     }
 
     void Rcon(Bytes *a, int n) {

@@ -8,10 +8,10 @@
 using namespace Krypt;
 
 int main() {
-    const double nanosec_in_sec = 1000000000.00;
+    const double nanosec_in_sec = 1'000'000'000.00;
 
     // create random plain text
-    size_t MB = 200;
+    size_t MB = 256;
     size_t bytes = MB * 1024 * 1024;
 
     unsigned char *plainText = new unsigned char[bytes];

@@ -42,7 +42,7 @@ namespace Krypt {
 
             for (size_t i = 0; i < cipherLen; i += Encryption->BLOCK_SIZE) {
                 Encryption->EncryptBlock(tempIV, encIV);
-                XorBlocks(cipher + i, encIV, recover + i, Encryption->BLOCK_SIZE);
+                XorAesBlock(cipher + i, encIV, recover + i);
                 memcpy(tempIV, cipher + i, Encryption->BLOCK_SIZE);
             }
 
@@ -58,14 +58,14 @@ namespace Krypt {
         template <typename CIPHER_TYPE, typename PADDING_TYPE>
         void CFB<CIPHER_TYPE, PADDING_TYPE>::blockEncrypt(Bytes *plain, Bytes *cipher, Bytes *iv) {
             Encryption->EncryptBlock(iv, cipher);
-            XorBlocks(plain, cipher, cipher, Encryption->BLOCK_SIZE);
+            XorAesBlock(plain, cipher, cipher);
             memcpy(iv, cipher, Encryption->BLOCK_SIZE);
         }
 
         template <typename CIPHER_TYPE, typename PADDING_TYPE>
         void CFB<CIPHER_TYPE, PADDING_TYPE>::blockDecrypt(Bytes *cipher, Bytes *recover, Bytes *iv) {
             Encryption->EncryptBlock(iv, recover);
-            XorBlocks(cipher, recover, recover, Encryption->BLOCK_SIZE);
+            XorAesBlock(cipher, recover, recover);
             memcpy(iv, cipher, Encryption->BLOCK_SIZE);
         }
     } // namespace Mode

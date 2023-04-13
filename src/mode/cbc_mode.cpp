@@ -48,7 +48,7 @@ namespace Krypt {
 
         template <typename CIPHER_TYPE, typename PADDING_TYPE>
         void CBC<CIPHER_TYPE, PADDING_TYPE>::blockEncrypt(Bytes *plain, Bytes *cipher, Bytes *iv) {
-            XorBlocks(iv, plain, iv, 16);
+            XorAesBlock(iv, plain, iv);
             Encryption->EncryptBlock(iv, cipher);
             memcpy(iv, cipher, 16);
         }
@@ -56,7 +56,7 @@ namespace Krypt {
         template <typename CIPHER_TYPE, typename PADDING_TYPE>
         void CBC<CIPHER_TYPE, PADDING_TYPE>::blockDecrypt(Bytes *cipher, Bytes *recover, Bytes *iv) {
             Encryption->DecryptBlock(cipher, recover);
-            XorBlocks(iv, recover, recover, Encryption->BLOCK_SIZE);
+            XorAesBlock(iv, recover, recover);
             memcpy(iv, cipher, Encryption->BLOCK_SIZE);
         }
 

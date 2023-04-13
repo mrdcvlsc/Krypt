@@ -86,7 +86,6 @@ void aesni_block_decrypt(Byte *cipher, Byte *recover, __m128i *decryptionRoundKe
     for (size_t i = Nr - 1; i > 1; i -= 2) {
         state = _mm_aesdec_si128(state, decryptionRoundKeys[i]);
         state = _mm_aesdec_si128(state, decryptionRoundKeys[i - 1]);
-
     }
 
     // last round

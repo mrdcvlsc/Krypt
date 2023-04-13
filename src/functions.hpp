@@ -10,6 +10,7 @@ namespace Krypt {
     inline void RotDWord(Bytes *a);
     inline void XorDWords(Bytes *a, Bytes *b, Bytes *dest);
     inline void XorBlocks(unsigned char *a, unsigned char *b, unsigned char *c, unsigned int len);
+    inline void XorAesBlock(unsigned char *a, unsigned char *b, unsigned char *result);
 
     void Rcon(Bytes *a, int n);
     void printHexArray(unsigned char a[], size_t n);
