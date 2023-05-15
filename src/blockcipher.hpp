@@ -103,6 +103,17 @@ namespace Krypt {
             /// key and the roundKeys of an instance of an AES class.
             void setKey(const Bytes *key, size_t keyLen);
 
+            /// @return 0 - portable, 1 - neon (aarch64, armv8), 2 - AES-NI (x86-64)
+            static constexpr int aes_implementation() {
+                #ifdef USE_AESNI
+                    return 2;
+                #elif defined(USE_ARM_AES)
+                    return 1;
+                #else
+                    return 0;
+                #endif
+            }
+
             /// constructor for AES.
             AES(const Bytes *ByteArray, size_t keyLen);
             ~AES();
