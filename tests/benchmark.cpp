@@ -11,7 +11,7 @@ int main() {
     const double nanosec_in_sec = 1'000'000'000.00;
 
     // create random plain text
-    size_t MB = 256;
+    size_t MB = 128;
     size_t bytes = MB * 1024 * 1024;
 
     unsigned char *plainText = new unsigned char[bytes];

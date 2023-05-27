@@ -1,13 +1,7 @@
 #ifndef KEY_EXPANSION_CPP
 #define KEY_EXPANSION_CPP
 
-#ifdef USE_AESNI
-    #include <bitset>
-    #include <immintrin.h>
-    #include <stdio.h>
-#endif
-
-#include "../../blockcipher.hpp"
+#include "AES.hpp"
 
 namespace Krypt {
     namespace BlockCipher {

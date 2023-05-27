@@ -6,44 +6,44 @@ Compiler : clang++
 
 | Block Cipher | Mode | MB | Seconds | Speed | Result |
 | ------------ | ---- | -- | ------- | ----- | ------ |
-| AES128 Enc | ECB | 512 | 42.99 | 11.91 mb/s | N/A |
-| AES128 Dec | ECB | 512 | 32.23 | 15.88 mb/s | success |
-| AES192 Enc | ECB | 512 | 51.36 | 9.97 mb/s | N/A |
-| AES192 Dec | ECB | 512 | 38.52 | 13.29 mb/s | success |
-| AES256 Enc | ECB | 512 | 60.01 | 8.53 mb/s | N/A |
-| AES256 Dec | ECB | 512 | 45.01 | 11.38 mb/s | success |
-| AES128 Enc | CBC | 512 | 43.56 | 11.75 mb/s | N/A |
-| AES128 Dec | CBC | 512 | 33.25 | 15.40 mb/s | success |
-| AES192 Enc | CBC | 512 | 51.60 | 9.92 mb/s | N/A |
-| AES192 Dec | CBC | 512 | 39.46 | 12.97 mb/s | success |
-| AES256 Enc | CBC | 512 | 60.77 | 8.43 mb/s | N/A |
-| AES256 Dec | CBC | 512 | 45.93 | 11.15 mb/s | success |
-| AES128 Enc | CFB | 512 | 43.86 | 11.67 mb/s | N/A |
-| AES128 Dec | CFB | 512 | 43.48 | 11.77 mb/s | success |
-| AES192 Enc | CFB | 512 | 52.20 | 9.81 mb/s | N/A |
-| AES192 Dec | CFB | 512 | 51.88 | 9.87 mb/s | success |
-| AES256 Enc | CFB | 512 | 60.78 | 8.42 mb/s | N/A |
-| AES256 Dec | CFB | 512 | 60.50 | 8.46 mb/s | success |
+| AES128 Enc | ECB | 128 | 14.11 | 9.07 mb/s | N/A |
+| AES128 Dec | ECB | 128 | 15.10 | 8.48 mb/s | success |
+| AES192 Enc | ECB | 128 | 16.93 | 7.56 mb/s | N/A |
+| AES192 Dec | ECB | 128 | 18.17 | 7.04 mb/s | success |
+| AES256 Enc | ECB | 128 | 19.75 | 6.48 mb/s | N/A |
+| AES256 Dec | ECB | 128 | 21.25 | 6.02 mb/s | success |
+| AES128 Enc | CBC | 128 | 14.15 | 9.05 mb/s | N/A |
+| AES128 Dec | CBC | 128 | 15.33 | 8.35 mb/s | success |
+| AES192 Enc | CBC | 128 | 16.98 | 7.54 mb/s | N/A |
+| AES192 Dec | CBC | 128 | 18.40 | 6.96 mb/s | success |
+| AES256 Enc | CBC | 128 | 19.80 | 6.47 mb/s | N/A |
+| AES256 Dec | CBC | 128 | 21.47 | 5.96 mb/s | success |
+| AES128 Enc | CFB | 128 | 14.31 | 8.94 mb/s | N/A |
+| AES128 Dec | CFB | 128 | 14.23 | 9.00 mb/s | success |
+| AES192 Enc | CFB | 128 | 17.14 | 7.47 mb/s | N/A |
+| AES192 Dec | CFB | 128 | 17.06 | 7.50 mb/s | success |
+| AES256 Enc | CFB | 128 | 19.96 | 6.41 mb/s | N/A |
+| AES256 Dec | CFB | 128 | 19.88 | 6.44 mb/s | success |
 
 ## AES-NI
 
 | Block Cipher | Mode | MB | Seconds | Speed | Result |
 | ------------ | ---- | -- | ------- | ----- | ------ |
-| AES128 Enc | ECB | 512 | 3.44 | 148.73 mb/s | N/A |
-| AES128 Dec | ECB | 512 | 3.08 | 165.99 mb/s | success |
-| AES192 Enc | ECB | 512 | 3.73 | 137.23 mb/s | N/A |
-| AES192 Dec | ECB | 512 | 3.34 | 153.47 mb/s | success |
-| AES256 Enc | ECB | 512 | 3.77 | 135.82 mb/s | N/A |
-| AES256 Dec | ECB | 512 | 3.62 | 141.59 mb/s | success |
-| AES128 Enc | CBC | 512 | 3.56 | 143.95 mb/s | N/A |
-| AES128 Dec | CBC | 512 | 4.13 | 123.92 mb/s | success |
-| AES192 Enc | CBC | 512 | 3.83 | 133.52 mb/s | N/A |
-| AES192 Dec | CBC | 512 | 4.40 | 116.26 mb/s | success |
-| AES256 Enc | CBC | 512 | 4.07 | 125.84 mb/s | N/A |
-| AES256 Dec | CBC | 512 | 4.67 | 109.69 mb/s | success |
-| AES128 Enc | CFB | 512 | 4.34 | 118.04 mb/s | N/A |
-| AES128 Dec | CFB | 512 | 3.95 | 129.68 mb/s | success |
-| AES192 Enc | CFB | 512 | 4.61 | 111.09 mb/s | N/A |
-| AES192 Dec | CFB | 512 | 4.25 | 120.49 mb/s | success |
-| AES256 Enc | CFB | 512 | 4.86 | 105.44 mb/s | N/A |
-| AES256 Dec | CFB | 512 | 4.41 | 116.06 mb/s | success |
+| AES128 Enc | ECB | 128 | 0.86 | 149.23 mb/s | N/A |
+| AES128 Dec | ECB | 128 | 0.77 | 165.77 mb/s | success |
+| AES192 Enc | ECB | 128 | 0.93 | 137.97 mb/s | N/A |
+| AES192 Dec | ECB | 128 | 0.84 | 153.09 mb/s | success |
+| AES256 Enc | ECB | 128 | 0.93 | 137.12 mb/s | N/A |
+| AES256 Dec | ECB | 128 | 0.89 | 143.05 mb/s | success |
+| AES128 Enc | CBC | 128 | 0.89 | 143.99 mb/s | N/A |
+| AES128 Dec | CBC | 128 | 1.03 | 123.96 mb/s | success |
+| AES192 Enc | CBC | 128 | 0.96 | 133.97 mb/s | N/A |
+| AES192 Dec | CBC | 128 | 1.09 | 117.06 mb/s | success |
+| AES256 Enc | CBC | 128 | 1.01 | 127.33 mb/s | N/A |
+| AES256 Dec | CBC | 128 | 1.16 | 110.52 mb/s | success |
+| AES128 Enc | CFB | 128 | 1.09 | 117.83 mb/s | N/A |
+| AES128 Dec | CFB | 128 | 0.99 | 129.74 mb/s | success |
+| AES192 Enc | CFB | 128 | 1.15 | 111.26 mb/s | N/A |
+| AES192 Dec | CFB | 128 | 1.05 | 121.81 mb/s | success |
+| AES256 Enc | CFB | 128 | 1.20 | 106.23 mb/s | N/A |
+| AES256 Dec | CFB | 128 | 1.09 | 116.93 mb/s | success |

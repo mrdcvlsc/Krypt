@@ -15,7 +15,7 @@ This fork was optimized and used by my file [encryption/decryption program](http
 **Compile with C++14 or above for maximum compatibility**
 
 ```
--std=c++14
+-std=c++17
 ```
 
 **Compilation Note:** This is a **header only** library, you 
@@ -118,6 +118,23 @@ int main()
 - ```operator>>``` - an overload for the right-shift operator
 - ```operator[]``` - an overload for the bracket operator, use for indexing the array
 
+-----------
+
+## **Make commands**
+
+1. Run tests
+
+    ```shell
+    make test_portable
+    make test_aesni
+    make test_neon
+    ```
+
+2. Run benchmarks
+
+    ```shell
+    make bench
+    ```
 
 -----------
 

@@ -1,8 +1,7 @@
 #ifndef KRYPT_AES_CPP
 #define KRYPT_AES_CPP
 
-#include "../../blockcipher.hpp"
-#include <iostream>
+#include "AES.hpp"
 
 namespace Krypt {
     namespace BlockCipher {

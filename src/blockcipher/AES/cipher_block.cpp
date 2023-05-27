@@ -1,44 +1,70 @@
 #ifndef CIPHER_BLOCK_CPP
 #define CIPHER_BLOCK_CPP
 
-#include "../../blockcipher.hpp"
-
-#ifdef USE_AESNI
-    #include "simd_aes.hpp"
-#elif defined(USE_ARM_AES)
-    #include "aarch64_aes.hpp"
-#endif
+#include "AES.hpp"
 
 namespace Krypt {
     namespace BlockCipher {
-        void AES::EncryptBlock(Bytes *src, Bytes *dest) {
+        void AES::EncryptBlock(Bytes *plain, Bytes *cipher) {
 #ifdef USE_AESNI
-            aesni_block_encrypt(src, dest, RoundedKeys, Nr);
+            // load the current block & current round key into the registers
+            __m128i state = _mm_loadu_si128((__m128i *) &plain[0]);
+
+            // original key
+            state = _mm_xor_si128(state, RoundedKeys[0]);
+
+            // perform usual rounds
+            for (size_t i = 1; i < Nr - 1; i += 2) {
+                state = _mm_aesenc_si128(state, RoundedKeys[i]);
+                state = _mm_aesenc_si128(state, RoundedKeys[i + 1]);
+            }
+
+            // last round
+            state = _mm_aesenc_si128(state, RoundedKeys[Nr - 1]);
+            state = _mm_aesenclast_si128(state, RoundedKeys[Nr]);
+
+            // store from register to array
+            _mm_storeu_si128((__m128i *) (cipher), state);
 #elif defined(USE_ARM_AES)
-            neon_aes_block_encrypt(src, dest, RoundedKeys, Nr);
+            uint8x16_t state = vld1q_u8(plain);
+
+            // Initial round
+            state = vaesmcq_u8(vaeseq_u8(state, RoundedKeys[0]));
+
+            // 8 main rounds
+            for (size_t i = 1; i < Nr - 1; i += 2) {
+                state = vaesmcq_u8(vaeseq_u8(state, RoundedKeys[i]));
+                state = vaesmcq_u8(vaeseq_u8(state, RoundedKeys[i + 1]));
+            }
+
+            // last 2 final round
+            state = vaeseq_u8(state, RoundedKeys[Nr - 1]);
+            state = veorq_u8(state, RoundedKeys[Nr]);
+
+            // store the result to cipher
+            vst1q_u8(cipher, state);
 #else
+            Bytes state[16];
 
-            Bytes state[4][4];
+            state[0 * 4 + 0] = plain[0];
+            state[0 * 4 + 1] = plain[4];
+            state[0 * 4 + 2] = plain[8];
+            state[0 * 4 + 3] = plain[12];
 
-            state[0][0] = src[0];
-            state[0][1] = src[4];
-            state[0][2] = src[8];
-            state[0][3] = src[12];
+            state[1 * 4 + 0] = plain[1];
+            state[1 * 4 + 1] = plain[5];
+            state[1 * 4 + 2] = plain[9];
+            state[1 * 4 + 3] = plain[13];
 
-            state[1][0] = src[1];
-            state[1][1] = src[5];
-            state[1][2] = src[9];
-            state[1][3] = src[13];
+            state[2 * 4 + 0] = plain[2];
+            state[2 * 4 + 1] = plain[6];
+            state[2 * 4 + 2] = plain[10];
+            state[2 * 4 + 3] = plain[14];
 
-            state[2][0] = src[2];
-            state[2][1] = src[6];
-            state[2][2] = src[10];
-            state[2][3] = src[14];
-
-            state[3][0] = src[3];
-            state[3][1] = src[7];
-            state[3][2] = src[11];
-            state[3][3] = src[15];
+            state[3 * 4 + 0] = plain[3];
+            state[3 * 4 + 1] = plain[7];
+            state[3 * 4 + 2] = plain[11];
+            state[3 * 4 + 3] = plain[15];
 
             AddRoundKey(state, RoundedKeys);
 
@@ -53,54 +79,85 @@ namespace Krypt {
             ShiftRows(state);
             AddRoundKey(state, RoundedKeys + Nr * 4 * Nb);
 
-            dest[0] = state[0][0];
-            dest[4] = state[0][1];
-            dest[8] = state[0][2];
-            dest[12] = state[0][3];
+            cipher[0] = state[0 * 4 + 0];
+            cipher[4] = state[0 * 4 + 1];
+            cipher[8] = state[0 * 4 + 2];
+            cipher[12] = state[0 * 4 + 3];
 
-            dest[1] = state[1][0];
-            dest[5] = state[1][1];
-            dest[9] = state[1][2];
-            dest[13] = state[1][3];
+            cipher[1] = state[1 * 4 + 0];
+            cipher[5] = state[1 * 4 + 1];
+            cipher[9] = state[1 * 4 + 2];
+            cipher[13] = state[1 * 4 + 3];
 
-            dest[2] = state[2][0];
-            dest[6] = state[2][1];
-            dest[10] = state[2][2];
-            dest[14] = state[2][3];
+            cipher[2] = state[2 * 4 + 0];
+            cipher[6] = state[2 * 4 + 1];
+            cipher[10] = state[2 * 4 + 2];
+            cipher[14] = state[2 * 4 + 3];
 
-            dest[3] = state[3][0];
-            dest[7] = state[3][1];
-            dest[11] = state[3][2];
-            dest[15] = state[3][3];
-
+            cipher[3] = state[3 * 4 + 0];
+            cipher[7] = state[3 * 4 + 1];
+            cipher[11] = state[3 * 4 + 2];
+            cipher[15] = state[3 * 4 + 3];
 #endif
         }
 
-        void AES::DecryptBlock(Bytes *src, Bytes *dest) {
+        void AES::DecryptBlock(Bytes *cipher, Bytes *recover) {
 #ifdef USE_AESNI
-            aesni_block_decrypt(src, dest, DecryptionRoundedKeys, Nr);
+            // load the current block & current round key into the registers
+            __m128i state = _mm_loadu_si128((__m128i *) &cipher[0]);
+
+            // first round
+            state = _mm_xor_si128(state, DecryptionRoundedKeys[Nr]);
+
+            // usual rounds
+            for (size_t i = Nr - 1; i > 1; i -= 2) {
+                state = _mm_aesdec_si128(state, DecryptionRoundedKeys[i]);
+                state = _mm_aesdec_si128(state, DecryptionRoundedKeys[i - 1]);
+            }
+
+            // last round
+            state = _mm_aesdec_si128(state, DecryptionRoundedKeys[1]);
+            state = _mm_aesdeclast_si128(state, DecryptionRoundedKeys[0]);
+
+            // store from register to array
+            _mm_storeu_si128((__m128i *) recover, state);
 #elif defined(USE_ARM_AES)
-            neon_aes_block_decrypt(src, dest, DecryptionRoundedKeys, Nr);
+            uint8x16_t state = vld1q_u8(cipher);
+
+            // Initial round
+            state = vaesimcq_u8(vaesdq_u8(state, DecryptionRoundedKeys[Nr]));
+
+            // 8 main rounds
+            for (size_t i = Nr - 1; i > 1; i -= 2) {
+                state = vaesimcq_u8(vaesdq_u8(state, DecryptionRoundedKeys[i]));
+                state = vaesimcq_u8(vaesdq_u8(state, DecryptionRoundedKeys[i - 1]));
+            }
+
+            // final 2 rounds
+            state = vaesdq_u8(state, DecryptionRoundedKeys[1]);
+            state = veorq_u8(state, DecryptionRoundedKeys[0]);
+
+            // store the result to recover
+            vst1q_u8(recover, state);
 #else
+            Bytes state[16];
 
-            Bytes state[4][4];
-
-            state[0][0] = src[0];
-            state[0][1] = src[4];
-            state[0][2] = src[8];
-            state[0][3] = src[12];
-            state[1][0] = src[1];
-            state[1][1] = src[5];
-            state[1][2] = src[9];
-            state[1][3] = src[13];
-            state[2][0] = src[2];
-            state[2][1] = src[6];
-            state[2][2] = src[10];
-            state[2][3] = src[14];
-            state[3][0] = src[3];
-            state[3][1] = src[7];
-            state[3][2] = src[11];
-            state[3][3] = src[15];
+            state[0 * 4 + 0] = cipher[0];
+            state[0 * 4 + 1] = cipher[4];
+            state[0 * 4 + 2] = cipher[8];
+            state[0 * 4 + 3] = cipher[12];
+            state[1 * 4 + 0] = cipher[1];
+            state[1 * 4 + 1] = cipher[5];
+            state[1 * 4 + 2] = cipher[9];
+            state[1 * 4 + 3] = cipher[13];
+            state[2 * 4 + 0] = cipher[2];
+            state[2 * 4 + 1] = cipher[6];
+            state[2 * 4 + 2] = cipher[10];
+            state[2 * 4 + 3] = cipher[14];
+            state[3 * 4 + 0] = cipher[3];
+            state[3 * 4 + 1] = cipher[7];
+            state[3 * 4 + 2] = cipher[11];
+            state[3 * 4 + 3] = cipher[15];
 
             AddRoundKey(state, RoundedKeys + Nr * 4 * Nb);
 
@@ -115,22 +172,22 @@ namespace Krypt {
             InvShiftRows(state);
             AddRoundKey(state, RoundedKeys);
 
-            dest[0] = state[0][0];
-            dest[4] = state[0][1];
-            dest[8] = state[0][2];
-            dest[12] = state[0][3];
-            dest[1] = state[1][0];
-            dest[5] = state[1][1];
-            dest[9] = state[1][2];
-            dest[13] = state[1][3];
-            dest[2] = state[2][0];
-            dest[6] = state[2][1];
-            dest[10] = state[2][2];
-            dest[14] = state[2][3];
-            dest[3] = state[3][0];
-            dest[7] = state[3][1];
-            dest[11] = state[3][2];
-            dest[15] = state[3][3];
+            recover[0] = state[0 * 4 + 0];
+            recover[4] = state[0 * 4 + 1];
+            recover[8] = state[0 * 4 + 2];
+            recover[12] = state[0 * 4 + 3];
+            recover[1] = state[1 * 4 + 0];
+            recover[5] = state[1 * 4 + 1];
+            recover[9] = state[1 * 4 + 2];
+            recover[13] = state[1 * 4 + 3];
+            recover[2] = state[2 * 4 + 0];
+            recover[6] = state[2 * 4 + 1];
+            recover[10] = state[2 * 4 + 2];
+            recover[14] = state[2 * 4 + 3];
+            recover[3] = state[3 * 4 + 0];
+            recover[7] = state[3 * 4 + 1];
+            recover[11] = state[3 * 4 + 2];
+            recover[15] = state[3 * 4 + 3];
 
 #endif
         }
