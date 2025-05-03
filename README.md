@@ -1,5 +1,7 @@
 # Krypt
 
+I'm not maintaining this AES C++ code anymore, all possible future updates will be done in my https://github.com/mrdcvlsc/AES for the same hardware accelerated implementations.
+
 ![build-test](https://github.com/mrdcvlsc/AES/actions/workflows/build-test.yml/badge.svg)
 
 Forked From : https://github.com/SergeyBel/AES
